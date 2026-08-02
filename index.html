@@ -172,6 +172,48 @@
   .booklet-row .bactions{display:flex; gap:6px;}
   .booklet-row .bactions a{ background:var(--green); color:#fff; padding:5px 10px; border-radius:8px; text-decoration:none; font-weight:700; font-size:11.5px; }
   .booklet-row .bactions a.secondary2{background:var(--ink);}
+  .booklet-type{background:var(--green-light); color:var(--green-deep); font-size:10.5px; padding:2px 8px; border-radius:99px; margin-inline-start:6px;}
+  .teacher-bio{font-size:12.5px; color:var(--ink-soft); line-height:1.7; margin-bottom:10px;}
+  .teacher-social{display:flex; gap:6px; margin:8px 0;}
+  .teacher-social a{
+    width:28px; height:28px; border-radius:50%; background:var(--field); display:flex; align-items:center;
+    justify-content:center; text-decoration:none; font-size:13px;
+  }
+  .news-card{background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
+  .news-card img{width:100%; height:140px; object-fit:cover; display:block; background:var(--field);}
+  .news-card .news-body{padding:14px 16px;}
+  .news-card .news-date{font-size:11.5px; color:var(--ink-mute); margin-bottom:4px;}
+  .news-card .news-title{font-size:15px; font-weight:900; margin-bottom:6px;}
+  .news-card .news-desc{font-size:12.5px; color:var(--ink-soft); line-height:1.8;}
+
+  /* Stage drill-down & teacher modal */
+  .list-simple{display:flex; flex-direction:column; gap:8px;}
+  .teacher-name-row{
+    background:var(--card); border:1px solid var(--line); border-radius:12px; padding:14px 18px;
+    font-size:14.5px; font-weight:700; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+    transition:all .15s ease;
+  }
+  .teacher-name-row:hover{border-color:var(--green); background:var(--green-light);}
+  .teacher-name-row .arrow{color:var(--green-deep); font-size:13px;}
+  .subject-card{
+    background:var(--card); border:1.5px solid var(--line); border-radius:14px; padding:16px; text-align:center;
+    cursor:pointer; font-weight:700; font-size:14px; transition:all .15s ease;
+  }
+  .subject-card:hover, .subject-card.active{border-color:var(--green); background:var(--green-light); color:var(--green-deep);}
+  .modal-overlay{
+    display:none; position:fixed; inset:0; background:rgba(16,20,25,.55); z-index:100;
+    align-items:center; justify-content:center; padding:20px;
+  }
+  .modal-overlay.show{display:flex;}
+  .modal-box{
+    background:var(--card); border-radius:20px; padding:26px 22px; max-width:440px; width:100%;
+    max-height:80vh; overflow-y:auto; position:relative; box-shadow:0 30px 60px -20px rgba(0,0,0,.4);
+  }
+  .modal-close{
+    position:absolute; top:14px; left:14px; background:var(--field); border:none; width:32px; height:32px;
+    border-radius:50%; font-size:14px; cursor:pointer; color:var(--ink-soft);
+  }
+  .modal-tname{font-size:18px; font-weight:900; margin-bottom:16px; padding-left:30px;}
   .uni-card:hover{ box-shadow:0 10px 22px -16px rgba(0,0,0,.18); transform:translateY(-2px); }
   .uni-card .uname{font-weight:700; font-size:14.5px; margin-bottom:4px;}
   .uni-card .uyear{font-size:12px; color:var(--ink-mute); margin-bottom:10px;}
@@ -339,10 +381,10 @@
     <div class="tabs" id="tabs">
       <button class="tab-btn active" data-cat="home"><span class="ico">🏠</span>الرئيسية</button>
       <button class="tab-btn" data-cat="stages"><span class="ico">📖</span>المراحل الدراسية</button>
-      <button class="tab-btn" data-cat="teachers"><span class="ico">👨‍🏫</span>المدرسون والمحتوى</button>
       <button class="tab-btn" data-cat="admission"><span class="ico">🎓</span>القبول والدراسة</button>
       <button class="tab-btn" data-cat="smart"><span class="ico">🧠</span>الأدوات الذكية</button>
       <button class="tab-btn" data-cat="office"><span class="ico">🏢</span>خدمات مكتب المستقبل</button>
+      <button class="tab-btn" data-cat="news"><span class="ico">📰</span>الأخبار</button>
       <button class="tab-btn" data-cat="founder"><span class="ico">👤</span>عن المؤسس</button>
     </div>
   </div>
@@ -376,10 +418,11 @@
     <div class="results-head"><h2>الوصول السريع لجميع الأقسام</h2></div>
     <div class="quick-grid">
       <div class="quick-card" data-goto-cat="stages"><div class="qicon">📖</div><div class="qlabel">المراحل الدراسية</div></div>
-      <div class="quick-card" data-goto-cat="teachers"><div class="qicon">👨‍🏫</div><div class="qlabel">المدرسون والمحتوى</div></div>
+      <div class="quick-card" data-goto-cat="stages"><div class="qicon">👨‍🏫</div><div class="qlabel">المدرسون والملازم</div></div>
       <div class="quick-card" data-goto-cat="admission"><div class="qicon">🎓</div><div class="qlabel">القبول والدراسة</div></div>
       <div class="quick-card" data-goto-cat="smart"><div class="qicon">🧠</div><div class="qlabel">الأدوات الذكية</div></div>
       <div class="quick-card" data-goto-cat="office"><div class="qicon">🏢</div><div class="qlabel">خدمات مكتب المستقبل</div></div>
+      <div class="quick-card" data-goto-cat="news"><div class="qicon">📰</div><div class="qlabel">الأخبار</div></div>
     </div>
   </div>
 
@@ -387,56 +430,43 @@
   <!-- CATEGORY: المراحل الدراسية -->
   <!-- ============================================================ -->
   <div class="cat-panel" id="cat-stages">
-    <div class="subtabs">
-      <button class="sub-btn active" data-sub="stage-primary">الابتدائية</button>
-      <button class="sub-btn" data-sub="stage-middle">المتوسطة</button>
-      <button class="sub-btn" data-sub="stage-prep">الإعدادية</button>
-      <button class="sub-btn" data-sub="stage-vocational">التعليم المهني</button>
-      <button class="sub-btn" data-sub="stage-uni">الجامعات</button>
-      <button class="sub-btn" data-sub="stage-grad">الدراسات العليا</button>
+    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ بياناته من ملفي <code>teachers.json</code> و<code>malazim.json</code>. اختر المرحلة ← الصف ← المادة، وشوف أسماء المدرسين، واضغط على أي اسم لعرض ملازمه وتحميلها.</div>
+
+    <div id="stagesEmptyNote" style="display:none;" class="soon-card">
+      <div class="badge">لا توجد بيانات بعد</div>
+      <h3>ما لكينا ملفات البيانات</h3>
+      <p>هذا طبيعي إذا لسا ما رفعتوا teachers.json و malazim.json، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا المدرسين والملازم عبر أداة admin.html، صدّروا الملفات، وارفعوها بجانب هذا الملف على استضافتكم.</p>
     </div>
-    <div class="subpanel active" id="panel-stage-primary"><div class="soon-card"><div class="badge">قريبًا</div><h3>المرحلة الابتدائية</h3><p>بانتظار توفر المناهج والملازم والملخصات والأسئلة ونماذج الامتحانات والجداول الدراسية الخاصة بهذه المرحلة.</p><div class="soon-list"><span>المناهج</span><span>الملازم</span><span>الملخصات</span><span>الأسئلة</span><span>نماذج الامتحانات</span><span>الجداول الدراسية</span></div></div></div>
-    <div class="subpanel" id="panel-stage-middle"><div class="soon-card"><div class="badge">قريبًا</div><h3>المرحلة المتوسطة</h3><p>بانتظار توفر المناهج والملازم والملخصات والأسئلة ونماذج الامتحانات والجداول الدراسية الخاصة بهذه المرحلة.</p><div class="soon-list"><span>المناهج</span><span>الملازم</span><span>الملخصات</span><span>الأسئلة</span><span>نماذج الامتحانات</span><span>الجداول الدراسية</span></div></div></div>
-    <div class="subpanel" id="panel-stage-prep"><div class="soon-card"><div class="badge">قريبًا</div><h3>المرحلة الإعدادية</h3><p>بانتظار توفر المناهج والملازم والملخصات والأسئلة ونماذج الامتحانات والجداول الدراسية الخاصة بهذه المرحلة. (قسم "القبول والدراسة" جاهز الآن لخريجي السادس الإعدادي).</p><div class="soon-list"><span>المناهج</span><span>الملازم</span><span>الملخصات</span><span>الأسئلة</span><span>نماذج الامتحانات</span><span>الجداول الدراسية</span></div></div></div>
-    <div class="subpanel" id="panel-stage-vocational"><div class="soon-card"><div class="badge">قريبًا</div><h3>التعليم المهني</h3><p>بانتظار توفر المناهج والملازم والملخصات والأسئلة ونماذج الامتحانات والجداول الدراسية الخاصة بهذا المسار.</p><div class="soon-list"><span>المناهج</span><span>الملازم</span><span>الملخصات</span><span>الأسئلة</span><span>نماذج الامتحانات</span><span>الجداول الدراسية</span></div></div></div>
-    <div class="subpanel" id="panel-stage-uni"><div class="soon-card"><div class="badge">قريبًا</div><h3>الجامعات</h3><p>المحتوى الدراسي الجامعي (مناهج الكليات، ملازم المواد) غير متوفر حاليًا. لكن كل ما يخص القبول والتخصصات موجود وجاهز في قسم "القبول والدراسة".</p></div></div>
-    <div class="subpanel" id="panel-stage-grad"><div class="soon-card"><div class="badge">قريبًا</div><h3>الدراسات العليا</h3><p>بانتظار توفر بيانات القبول والمناهج الخاصة بالماجستير والدكتوراه.</p></div></div>
+
+    <div id="stagesNav">
+      <div class="results-head"><h2>1️⃣ اختر المرحلة</h2></div>
+      <div class="pill-group" id="stageGroupPills">
+        <div class="pill-opt active" data-v="الابتدائية">الابتدائية</div>
+        <div class="pill-opt" data-v="المتوسطة">المتوسطة</div>
+        <div class="pill-opt" data-v="الإعدادية">الإعدادية</div>
+        <div class="pill-opt" data-v="التعليم المهني">التعليم المهني</div>
+      </div>
+
+      <div class="results-head"><h2>2️⃣ اختر الصف</h2></div>
+      <div class="pill-group" id="gradePills"></div>
+
+      <div class="results-head"><h2>3️⃣ اختر المادة</h2><span class="results-count" id="subjectsCount"></span></div>
+      <div class="uni-grid" id="subjectsGrid"></div>
+
+      <div id="teachersBySubjectWrap" style="display:none;">
+        <div class="results-head"><h2 id="subjectTeachersTitle">المدرّسون</h2></div>
+        <div class="list-simple" id="teachersBySubjectList"></div>
+      </div>
+    </div>
   </div>
 
-  <!-- ============================================================ -->
-  <!-- CATEGORY: المدرسون والمحتوى التعليمي -->
-  <!-- ============================================================ -->
-  <div class="cat-panel" id="cat-teachers">
-    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ بياناته من ملف <code>teachers.json</code> إلى جانب هذا الموقع. عدّل المدرسين والملازم عبر أداة الإدارة المنفصلة (admin.html)، صدّر الملف، وارفعه بجانب هذا الملف على استضافتك.</div>
-
-    <div class="card-box">
-      <div class="field"><label>بحث</label><div class="search-field"><input type="text" id="teacherSearch" placeholder="ابحث باسم المدرّس أو المادة..."><span class="icon">🔍</span></div></div>
-      <div class="field"><label>المرحلة</label>
-        <div class="pill-group" id="teacherStagePills">
-          <div class="pill-opt active" data-v="كل">الكل</div>
-          <div class="pill-opt" data-v="ابتدائية">ابتدائية</div>
-          <div class="pill-opt" data-v="متوسطة">متوسطة</div>
-          <div class="pill-opt" data-v="اعدادية">إعدادية</div>
-        </div>
-      </div>
-      <div class="grid2-plain" style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
-        <div class="field"><label>المحافظة</label>
-          <div class="dd"><span id="teacherGovLabel">كل المحافظات</span><span class="chev">⌃⌄</span>
-            <select id="teacherGovFilter"><option value="">كل المحافظات</option></select>
-          </div>
-        </div>
-        <div class="field"><label>المنطقة</label><input type="text" id="teacherAreaFilter" placeholder="مثال: الكرادة"></div>
-      </div>
+  <!-- Teacher popup modal -->
+  <div class="modal-overlay" id="teacherModalOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="teacherModalClose">✕</button>
+      <div class="modal-tname" id="modalTeacherName"></div>
+      <div id="modalMalazimList"></div>
     </div>
-
-    <div id="teachersEmptyNote" style="display:none;" class="soon-card">
-      <div class="badge">لا توجد بيانات بعد</div>
-      <h3>ما لكينا ملف teachers.json</h3>
-      <p>هذا طبيعي إذا لسا ما رفعتوا الملف، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا المدرسين عبر أداة admin.html، صدّروا teachers.json، وارفعوه بجانب هذا الملف على استضافتكم.</p>
-    </div>
-
-    <div class="results-head"><h2>المدرسون</h2><span class="results-count" id="teachersCount"></span></div>
-    <div id="teachersGrid" class="uni-grid"></div>
   </div>
 
   <!-- ============================================================ -->
@@ -677,6 +707,19 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY: الأخبار -->
+  <!-- ============================================================ -->
+  <div class="cat-panel" id="cat-news">
+    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ الأخبار تلقائيًا من ملف <code>news.json</code> إلى جانب هذا الموقع. أضف الأخبار مباشرة داخل الملف بنفس التنسيق ليظهر تلقائيًا هنا.</div>
+    <div id="newsEmptyNote" style="display:none;" class="soon-card">
+      <div class="badge">لا توجد أخبار بعد</div>
+      <h3>ما لكينا ملف news.json</h3>
+      <p>هذا طبيعي إذا لسا ما رفعتوا الملف، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا الأخبار داخل news.json وارفعوه بجانب هذا الملف على استضافتكم.</p>
+    </div>
+    <div id="newsGrid" class="uni-grid"></div>
   </div>
 
   <!-- ============================================================ -->
@@ -995,61 +1038,128 @@ function renderUnis(list){
 }
 renderUnis(UNIS);
 
-/* ---------- TEACHERS & BOOKLETS ---------- */
-let TEACHERS = [], BOOKLETS = [];
-let teacherStageFilter = 'كل';
-fetch('teachers.json').then(r=>{ if(!r.ok) throw new Error('not found'); return r.json(); })
+/* ---------- STAGE GROUPS & GRADES ---------- */
+const STAGE_GROUPS = {
+  'الابتدائية': ['الأول الابتدائي','الثاني الابتدائي','الثالث الابتدائي','الرابع الابتدائي','الخامس الابتدائي','السادس الابتدائي'],
+  'المتوسطة': ['الأول المتوسط','الثاني المتوسط','الثالث المتوسط'],
+  'الإعدادية': ['الرابع العلمي','الخامس العلمي','السادس العلمي','الرابع الأدبي','الخامس الأدبي','السادس الأدبي'],
+  'التعليم المهني': ['الصناعي','التجاري','الزراعي','الحاسوب وتقنية المعلومات']
+};
+
+let TEACHERS = [], MALAZIM = [];
+let currentStageGroup = 'الابتدائية';
+let currentGrade = null;
+let currentSubject = null;
+
+Promise.all([
+  fetch('teachers.json').then(r=>{ if(!r.ok) throw new Error('not found'); return r.json(); }).catch(()=>null),
+  fetch('malazim.json').then(r=>{ if(!r.ok) throw new Error('not found'); return r.json(); }).catch(()=>null)
+]).then(([teachersData, malazimData])=>{
+  if(!teachersData && !malazimData){
+    document.getElementById('stagesEmptyNote').style.display='block';
+    document.getElementById('stagesNav').style.display='none';
+    return;
+  }
+  TEACHERS = (teachersData && teachersData.teachers) || [];
+  MALAZIM = (malazimData && malazimData.malazim) || [];
+  renderGrades();
+});
+
+wirePillGroup(document.getElementById('stageGroupPills'), v=>{
+  currentStageGroup = v; currentGrade=null; currentSubject=null;
+  renderGrades();
+});
+
+function renderGrades(){
+  const grades = STAGE_GROUPS[currentStageGroup] || [];
+  const wrap = document.getElementById('gradePills');
+  wrap.innerHTML = grades.map(g=>`<div class="pill-opt" data-v="${g}">${g}</div>`).join('');
+  wrap.querySelectorAll('.pill-opt').forEach(p=>{
+    p.addEventListener('click', ()=>{
+      wrap.querySelectorAll('.pill-opt').forEach(x=>x.classList.remove('active'));
+      p.classList.add('active');
+      currentGrade = p.dataset.v; currentSubject=null;
+      renderSubjects();
+    });
+  });
+  document.getElementById('subjectsGrid').innerHTML='';
+  document.getElementById('subjectsCount').textContent='';
+  document.getElementById('teachersBySubjectWrap').style.display='none';
+  if(grades.length){ wrap.querySelector('.pill-opt').classList.add('active'); currentGrade=grades[0]; renderSubjects(); }
+}
+
+function renderSubjects(){
+  const subjects = [...new Set(TEACHERS.filter(t=>t.stage===currentGrade).map(t=>t.subject).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
+  const grid = document.getElementById('subjectsGrid');
+  document.getElementById('subjectsCount').textContent = subjects.length ? subjects.length+' مادة' : '';
+  document.getElementById('teachersBySubjectWrap').style.display='none';
+  if(subjects.length===0){
+    grid.innerHTML = '<div class="empty-state"><div class="display">لا توجد مواد مضافة لهذا الصف بعد</div></div>';
+    return;
+  }
+  grid.innerHTML = subjects.map(s=>`<div class="subject-card" data-v="${s}">${s}</div>`).join('');
+  grid.querySelectorAll('.subject-card').forEach(c=>{
+    c.addEventListener('click', ()=>{
+      grid.querySelectorAll('.subject-card').forEach(x=>x.classList.remove('active'));
+      c.classList.add('active');
+      currentSubject = c.dataset.v;
+      renderTeachersBySubject();
+    });
+  });
+}
+
+function renderTeachersBySubject(){
+  const list = TEACHERS.filter(t=>t.stage===currentGrade && t.subject===currentSubject);
+  const wrap = document.getElementById('teachersBySubjectWrap');
+  document.getElementById('subjectTeachersTitle').textContent = `مدرّسو مادة ${currentSubject}`;
+  wrap.style.display='block';
+  const listEl = document.getElementById('teachersBySubjectList');
+  if(list.length===0){ listEl.innerHTML = '<div class="empty-state"><div class="display">لا يوجد مدرّسون لهذه المادة بعد</div></div>'; return; }
+  listEl.innerHTML = list.map(t=>`<div class="teacher-name-row" data-name="${t.name}"><span>👤 ${t.name}</span><span class="arrow">عرض الملازم ◀</span></div>`).join('');
+  listEl.querySelectorAll('.teacher-name-row').forEach(row=>{
+    row.addEventListener('click', ()=>openTeacherModal(row.dataset.name));
+  });
+}
+
+function openTeacherModal(name){
+  const tMalazim = MALAZIM.filter(b=>b.teacherName===name);
+  document.getElementById('modalTeacherName').textContent = name;
+  const listEl = document.getElementById('modalMalazimList');
+  if(tMalazim.length===0){
+    listEl.innerHTML = '<div style="font-size:13px; color:var(--ink-mute);">لا توجد ملازم مضافة لهذا المدرّس بعد</div>';
+  } else {
+    listEl.innerHTML = tMalazim.map(b=>`
+      <div class="booklet-row"><span>📄 ${b.name}${b.type?`<span class="booklet-type">${b.type}</span>`:''}</span>
+        <div class="bactions"><a class="secondary2" href="${b.downloadUrl}" target="_blank" rel="noopener" download>تحميل</a></div>
+      </div>`).join('');
+  }
+  document.getElementById('teacherModalOverlay').classList.add('show');
+}
+document.getElementById('teacherModalClose').addEventListener('click', ()=>{
+  document.getElementById('teacherModalOverlay').classList.remove('show');
+});
+document.getElementById('teacherModalOverlay').addEventListener('click', e=>{
+  if(e.target.id==='teacherModalOverlay') document.getElementById('teacherModalOverlay').classList.remove('show');
+});
+
+/* ---------- NEWS ---------- */
+fetch('news.json').then(r=>{ if(!r.ok) throw new Error('not found'); return r.json(); })
   .then(data=>{
-    TEACHERS = data.teachers || [];
-    BOOKLETS = data.booklets || [];
-    populateGovFilter();
-    renderTeachersList();
+    const items = data.news || [];
+    if(items.length===0){ document.getElementById('newsEmptyNote').style.display='block'; return; }
+    items.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
+    document.getElementById('newsGrid').innerHTML = items.map(n=>`
+      <div class="news-card">
+        ${n.image?`<img src="${n.image}" onerror="this.style.display='none'">`:''}
+        <div class="news-body">
+          <div class="news-date">${n.date||''}</div>
+          <div class="news-title">${n.title||''}</div>
+          <div class="news-desc">${n.description||''}</div>
+        </div>
+      </div>`).join('');
   })
-  .catch(()=>{
-    document.getElementById('teachersEmptyNote').style.display='block';
-  });
+  .catch(()=>{ document.getElementById('newsEmptyNote').style.display='block'; });
 
-function populateGovFilter(){
-  const govs = [...new Set(TEACHERS.map(t=>t.governorate).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ar'));
-  const sel = document.getElementById('teacherGovFilter');
-  govs.forEach(g=>{ const o=document.createElement('option'); o.value=g; o.textContent=g; sel.appendChild(o); });
-  syncLabel(sel, document.getElementById('teacherGovLabel'));
-}
-
-function renderTeachersList(){
-  const q = document.getElementById('teacherSearch').value.trim();
-  const gov = document.getElementById('teacherGovFilter').value;
-  const area = document.getElementById('teacherAreaFilter').value.trim();
-  let list = TEACHERS.filter(t=>{
-    if(teacherStageFilter!=='كل' && t.stage!==teacherStageFilter) return false;
-    if(gov && t.governorate!==gov) return false;
-    if(area && !(t.area||'').includes(area)) return false;
-    if(q && !((t.name||'').includes(q) || (t.subject||'').includes(q))) return false;
-    return true;
-  });
-  document.getElementById('teachersCount').textContent = list.length ? list.length+' مدرّس' : '';
-  const grid = document.getElementById('teachersGrid');
-  if(TEACHERS.length===0){ grid.innerHTML=''; return; }
-  if(list.length===0){ grid.innerHTML = '<div class="empty-state"><div class="display">لا توجد نتائج مطابقة</div></div>'; return; }
-  grid.innerHTML = list.map(t=>{
-    const tBooklets = BOOKLETS.filter(b=>b.teacherId===t.id);
-    return `<div class="teacher-card">
-      <div class="teacher-head">
-        <img src="${t.photo||''}" onerror="this.style.display='none'">
-        <div><div class="tname">${t.name}</div><div class="tmeta">${t.subject||''} · ${t.stage||''} · ${t.governorate||''}${t.area?' - '+t.area:''}</div></div>
-      </div>
-      ${t.youtube?`<a class="teacher-yt" href="${t.youtube}" target="_blank" rel="noopener">📺 محاضرات اليوتيوب</a>`:''}
-      ${tBooklets.length? tBooklets.map(b=>`
-        <div class="booklet-row"><span>📄 ${b.name}</span>
-          <div class="bactions"><a href="${b.file}" target="_blank" rel="noopener">عرض</a><a class="secondary2" href="${b.file}" download>تحميل</a></div>
-        </div>`).join('') : '<div style="font-size:12px; color:var(--ink-mute);">لا توجد ملازم مضافة لهذا المدرّس بعد</div>'}
-    </div>`;
-  }).join('');
-}
-document.getElementById('teacherSearch').addEventListener('input', renderTeachersList);
-document.getElementById('teacherGovFilter').addEventListener('change', renderTeachersList);
-document.getElementById('teacherAreaFilter').addEventListener('input', renderTeachersList);
-wirePillGroup(document.getElementById('teacherStagePills'), v=>{ teacherStageFilter=v; renderTeachersList(); });
 document.getElementById('uniSearch').addEventListener('input', e=>{
   const q=e.target.value.trim();
   renderUnis(UNIS.filter(u=>u.name.includes(q)));
