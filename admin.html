@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>لوحة إدارة المدرسين والملازم — مستقبلي</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#F6F7F9; --card:#FFFFFF; --ink:#181C22; --ink-soft:#6B7280; --ink-mute:#9CA3AF;
+    --green:#16A34A; --green-deep:#0E7A38; --green-light:#E7F8ED;
+    --line:#E7E9ED; --field:#F3F4F6; --red:#DC4C4C; --amber:#D99A2B;
+    --safe-t:env(safe-area-inset-top); --safe-b:env(safe-area-inset-bottom);
+    --safe-l:env(safe-area-inset-left); --safe-r:env(safe-area-inset-right);
+  }
+  *{box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    background:var(--bg); color:var(--ink); font-family:'Tajawal',sans-serif;
+    padding-bottom:calc(80px + var(--safe-b));
+    padding-top:var(--safe-t);
+  }
+  .wrap{max-width:900px; margin:0 auto; padding:18px 16px; padding-inline:calc(16px + var(--safe-l)) calc(16px + var(--safe-r));}
+  h1{font-size:20px; font-weight:900; margin-bottom:6px; line-height:1.4;}
+  .sub{color:var(--ink-soft); font-size:13px; margin-bottom:18px; line-height:1.8;}
+  .warn{background:#FBEFD9; border-right:4px solid var(--amber); padding:13px 16px; border-radius:10px; font-size:12.5px; color:#7A5411; margin-bottom:20px; line-height:1.8;}
+
+  /* Buttons: min 44px tap target (Apple HIG) */
+  .btn{
+    background:var(--green); color:#fff; border:none; padding:13px 18px; border-radius:12px;
+    font-family:'Tajawal',sans-serif; font-weight:700; font-size:14.5px; cursor:pointer;
+    min-height:46px; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    touch-action:manipulation; -webkit-user-select:none; user-select:none; white-space:nowrap;
+  }
+  .btn:active{transform:scale(0.97); background:var(--green-deep);}
+  .btn.secondary{background:var(--ink);}
+  .btn.secondary:active{background:#000;}
+  .btn.danger{background:var(--red);}
+  .btn.ghost{background:var(--field); color:var(--ink);}
+  .btn.ghost:active{background:var(--line);}
+  input[type=file]{display:none;}
+
+  /* Sticky action bar always reachable on mobile */
+  .bar{
+    display:flex; gap:10px; flex-wrap:wrap; margin-bottom:20px;
+  }
+  .bar .btn{flex:1; min-width:150px;}
+  @media (max-width:480px){
+    .bar{ position:sticky; top:0; z-index:40; background:rgba(246,247,249,.95); backdrop-filter:blur(6px);
+      margin:0 -16px 18px; padding:10px 16px; border-bottom:1px solid var(--line); }
+    .bar .btn{flex:1 1 calc(50% - 5px); min-width:0; font-size:13px; padding:12px 8px;}
+  }
+
+  .tabs{display:flex; gap:8px; margin-bottom:18px; border-bottom:2px solid var(--line); overflow-x:auto;}
+  .tab{
+    padding:12px 18px; border-radius:10px 10px 0 0; background:var(--field); font-weight:700; font-size:14.5px;
+    cursor:pointer; color:var(--ink-soft); flex:1; text-align:center; white-space:nowrap;
+    min-height:46px; display:flex; align-items:center; justify-content:center; touch-action:manipulation;
+  }
+  .tab.active{background:var(--ink); color:#fff;}
+  .section{display:none;}
+  .section.active{display:block;}
+  .card-box{background:var(--card); border:1px solid var(--line); border-radius:16px; padding:18px 16px; margin-bottom:18px;}
+  .grid2{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+  @media (max-width:640px){.grid2{grid-template-columns:1fr;}}
+
+  .field{margin-bottom:16px;}
+  .field label{display:block; font-size:13px; font-weight:700; margin-bottom:7px; color:var(--ink-soft);}
+  /* font-size 16px minimum prevents iOS Safari auto-zoom on focus */
+  .field input, .field select, .field textarea{
+    width:100%; padding:13px 14px; border:1.5px solid var(--line); border-radius:10px; font-family:'Tajawal',sans-serif;
+    font-size:16px; background:var(--field); min-height:48px; -webkit-appearance:none; appearance:none;
+  }
+  .field select{
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%236B7280'><path d='M5.5 7.5l4.5 4.5 4.5-4.5z'/></svg>");
+    background-repeat:no-repeat; background-position:left 12px center; background-size:16px;
+  }
+  .field textarea{resize:vertical; min-height:70px;}
+  .field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--green); box-shadow:0 0 0 3px rgba(22,163,74,.15);}
+
+  .upload-row{display:flex; gap:10px; align-items:center; flex-wrap:wrap;}
+  .upload-row .btn{padding:11px 16px; font-size:13px; min-height:44px; flex:none;}
+  .upload-row input[type=text]{min-width:200px;}
+  .file-status{font-size:12.5px; color:var(--ink-mute); width:100%;}
+
+  .list{display:flex; flex-direction:column; gap:10px;}
+  .item{
+    background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px;
+    display:flex; flex-wrap:wrap; justify-content:space-between; align-items:center; gap:10px;
+  }
+  .item img{width:44px; height:44px; border-radius:10px; object-fit:cover; background:var(--field); flex-shrink:0;}
+  .item-main{display:flex; align-items:center; gap:12px; flex:1 1 200px; min-width:0;}
+  .item-info{min-width:0;}
+  .item-info b{font-size:14.5px; display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .item-info span{font-size:12px; color:var(--ink-soft); display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+  .item-actions{display:flex; gap:8px; flex-shrink:0;}
+  .item-actions button{
+    background:var(--field); border:none; padding:10px 16px; border-radius:10px; font-size:13px; cursor:pointer;
+    font-family:'Tajawal',sans-serif; font-weight:700; min-height:42px; touch-action:manipulation;
+  }
+  .item-actions button:active{background:var(--line);}
+  .item-actions button.del{color:var(--red);}
+  .item-actions button.edit{color:var(--green-deep);}
+  @media (max-width:420px){
+    .item{flex-direction:column; align-items:stretch;}
+    .item-actions{width:100%;}
+    .item-actions button{flex:1;}
+  }
+
+  .empty{color:var(--ink-mute); font-size:13.5px; text-align:center; padding:30px 16px;}
+  .pill-tag{background:var(--field); padding:2px 9px; border-radius:99px; font-size:11px; margin-inline-start:4px;}
+
+  /* form section headers get more breathing room on mobile */
+  h3{line-height:1.5;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🛠️ لوحة إدارة المدرسين والملازم</h1>
+  <p class="sub">أضف/عدّل/احذف المدرسين والملازم من هنا، ثم اضغط "تصدير الملف" وارفع <b>teachers.json</b> إلى نفس مجلد موقعك. أي تعديل تسويه هنا لازم تصدّره وترفعه من جديد حتى يظهر بالموقع.</p>
+
+  <div class="warn">⚠️ هذه الصفحة للاستخدام الداخلي فقط — لا تشاركوا رابطها مع الطلاب. لا يوجد فيها تسجيل دخول، وأي من يفتحها يقدر يعدّل البيانات (قبل التصدير).</div>
+
+  <div class="bar">
+    <button class="btn" id="exportBtn">⬇️ تصدير الملف (teachers.json)</button>
+    <label class="btn secondary" for="importInput">⬆️ استيراد ملف موجود</label>
+    <input type="file" id="importInput" accept=".json">
+    <button class="btn ghost" id="clearBtn">🗑️ تفريغ الكل</button>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="teachers">👨‍🏫 المدرسون</div>
+    <div class="tab" data-tab="booklets">📄 الملازم</div>
+  </div>
+
+  <!-- ================= TEACHERS ================= -->
+  <div class="section active" id="sec-teachers">
+    <div class="card-box">
+      <h3 id="teacherFormTitle" style="margin-bottom:14px; font-size:15px;">➕ إضافة مدرّس جديد</h3>
+      <input type="hidden" id="teacherEditId">
+      <div class="grid2">
+        <div class="field"><label>الاسم</label><input type="text" id="tName" placeholder="مثال: أ. أحمد الجبوري"></div>
+        <div class="field"><label>المادة</label><input type="text" id="tSubject" placeholder="مثال: الرياضيات"></div>
+        <div class="field"><label>المرحلة الدراسية</label>
+          <select id="tStage">
+            <option value="ابتدائية">ابتدائية</option>
+            <option value="متوسطة">متوسطة</option>
+            <option value="اعدادية" selected>إعدادية</option>
+          </select>
+        </div>
+        <div class="field"><label>المحافظة</label>
+          <select id="tGov">
+            <option>بغداد</option><option>البصرة</option><option>نينوى</option><option>أربيل</option><option>النجف</option>
+            <option>كربلاء</option><option>ذي قار</option><option>الأنبار</option><option>ديالى</option><option>كركوك</option>
+            <option>بابل</option><option>واسط</option><option>ميسان</option><option>القادسية</option><option>المثنى</option>
+            <option>صلاح الدين</option><option>دهوك</option><option>السليمانية</option>
+          </select>
+        </div>
+        <div class="field"><label>المنطقة</label><input type="text" id="tArea" placeholder="مثال: الكرادة"></div>
+        <div class="field"><label>رابط اليوتيوب (اختياري)</label><input type="text" id="tYoutube" placeholder="https://youtube.com/..."></div>
+      </div>
+      <div class="field">
+        <label>الصورة الشخصية</label>
+        <div class="upload-row">
+          <input type="text" id="tPhotoUrl" placeholder="الصق رابط صورة (اختياري)..." style="flex:1;">
+          <label class="btn ghost" for="tPhotoFile">📷 أو ارفع صورة</label>
+          <input type="file" id="tPhotoFile" accept="image/*">
+          <span class="file-status" id="tPhotoStatus"></span>
+        </div>
+      </div>
+      <div class="bar">
+        <button class="btn" id="tSaveBtn">💾 حفظ المدرّس</button>
+        <button class="btn ghost" id="tCancelBtn" style="display:none;">إلغاء التعديل</button>
+      </div>
+    </div>
+    <div class="list" id="teachersList"></div>
+  </div>
+
+  <!-- ================= BOOKLETS ================= -->
+  <div class="section" id="sec-booklets">
+    <div class="card-box">
+      <h3 id="bookletFormTitle" style="margin-bottom:14px; font-size:15px;">➕ إضافة ملزمة جديدة</h3>
+      <input type="hidden" id="bookletEditId">
+      <div class="grid2">
+        <div class="field"><label>اسم الملزمة</label><input type="text" id="bName" placeholder="مثال: ملزمة الرياضيات - الفصل الأول"></div>
+        <div class="field"><label>المادة</label><input type="text" id="bSubject" placeholder="مثال: الرياضيات"></div>
+        <div class="field"><label>المرحلة الدراسية</label>
+          <select id="bStage"><option value="ابتدائية">ابتدائية</option><option value="متوسطة">متوسطة</option><option value="اعدادية" selected>إعدادية</option></select>
+        </div>
+        <div class="field"><label>المدرّس</label><select id="bTeacher"><option value="">— بدون مدرّس محدد —</option></select></div>
+      </div>
+      <div class="field">
+        <label>ملف الملزمة</label>
+        <div class="upload-row">
+          <input type="text" id="bFileUrl" placeholder="الصق رابط Google Drive أو Telegram..." style="flex:1;">
+          <label class="btn ghost" for="bFileUpload">📎 أو ارفع PDF مباشرة</label>
+          <input type="file" id="bFileUpload" accept="application/pdf">
+          <span class="file-status" id="bFileStatus"></span>
+        </div>
+        <p style="font-size:11.5px; color:var(--ink-mute); margin-top:6px;">💡 الأفضل استخدام رابط Google Drive أو Telegram للملفات الكبيرة. الرفع المباشر يخزّن الملف داخل بيانات الموقع نفسها، وهو مناسب فقط للملفات الصغيرة (أقل من 3-4 ميغابايت تقريبًا) حتى لا يصبح الموقع بطيئًا.</p>
+      </div>
+      <div class="bar">
+        <button class="btn" id="bSaveBtn">💾 حفظ الملزمة</button>
+        <button class="btn ghost" id="bCancelBtn" style="display:none;">إلغاء التعديل</button>
+      </div>
+    </div>
+    <div class="list" id="bookletsList"></div>
+  </div>
+</div>
+
+<script>
+let teachers = [];
+let booklets = [];
+let editingTeacherId = null;
+let editingBookletId = null;
+let tPhotoData = ''; // base64 or empty
+let bFileData = ''; // base64 or empty
+
+/* ---------- TABS ---------- */
+document.querySelectorAll('.tab').forEach(t=>{
+  t.addEventListener('click', ()=>{
+    document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(x=>x.classList.remove('active'));
+    t.classList.add('active');
+    document.getElementById('sec-'+t.dataset.tab).classList.add('active');
+  });
+});
+
+/* ---------- helpers ---------- */
+function uid(){ return 't'+Date.now()+Math.floor(Math.random()*1000); }
+function fileToBase64(file, cb){
+  const reader = new FileReader();
+  reader.onload = ()=>cb(reader.result);
+  reader.readAsDataURL(file);
+}
+
+/* ---------- TEACHER PHOTO UPLOAD ---------- */
+document.getElementById('tPhotoFile').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  fileToBase64(file, data=>{
+    tPhotoData = data;
+    document.getElementById('tPhotoStatus').textContent = '✅ تم رفع: '+file.name;
+    document.getElementById('tPhotoUrl').value = '';
+  });
+});
+
+/* ---------- BOOKLET FILE UPLOAD ---------- */
+document.getElementById('bFileUpload').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  if(file.size > 4*1024*1024){
+    if(!confirm('حجم الملف أكبر من 4 ميغابايت وقد يبطّئ الموقع كثيرًا. هل تريد المتابعة؟')) { e.target.value=''; return; }
+  }
+  fileToBase64(file, data=>{
+    bFileData = data;
+    document.getElementById('bFileStatus').textContent = '✅ تم رفع: '+file.name;
+    document.getElementById('bFileUrl').value = '';
+  });
+});
+
+/* ---------- SAVE TEACHER ---------- */
+document.getElementById('tSaveBtn').addEventListener('click', ()=>{
+  const name=document.getElementById('tName').value.trim();
+  if(!name){ alert('أدخل اسم المدرّس'); return; }
+  const obj = {
+    id: editingTeacherId || uid(),
+    name, subject: document.getElementById('tSubject').value.trim(),
+    stage: document.getElementById('tStage').value,
+    governorate: document.getElementById('tGov').value,
+    area: document.getElementById('tArea').value.trim(),
+    youtube: document.getElementById('tYoutube').value.trim(),
+    photo: tPhotoData || document.getElementById('tPhotoUrl').value.trim()
+  };
+  if(editingTeacherId){
+    teachers = teachers.map(t=>t.id===editingTeacherId?obj:t);
+  } else {
+    teachers.push(obj);
+  }
+  resetTeacherForm();
+  renderTeachers(); renderTeacherOptions();
+});
+function resetTeacherForm(){
+  editingTeacherId = null; tPhotoData='';
+  document.getElementById('teacherFormTitle').textContent = '➕ إضافة مدرّس جديد';
+  document.getElementById('tCancelBtn').style.display='none';
+  ['tName','tSubject','tArea','tYoutube','tPhotoUrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('tPhotoStatus').textContent='';
+  document.getElementById('tPhotoFile').value='';
+}
+document.getElementById('tCancelBtn').addEventListener('click', resetTeacherForm);
+
+function renderTeachers(){
+  const wrap = document.getElementById('teachersList');
+  if(teachers.length===0){ wrap.innerHTML = '<div class="empty">لا يوجد مدرّسون بعد</div>'; return; }
+  wrap.innerHTML = teachers.map(t=>`
+    <div class="item">
+      <div class="item-main">
+        <img src="${t.photo||''}" onerror="this.style.display='none'">
+        <div class="item-info"><b>${t.name}</b><span>${t.subject} · ${t.stage} · ${t.governorate}${t.area?' - '+t.area:''}</span></div>
+      </div>
+      <div class="item-actions">
+        <button class="edit" data-id="${t.id}">تعديل</button>
+        <button class="del" data-id="${t.id}">حذف</button>
+      </div>
+    </div>`).join('');
+  wrap.querySelectorAll('.edit').forEach(b=>b.addEventListener('click', ()=>editTeacher(b.dataset.id)));
+  wrap.querySelectorAll('.del').forEach(b=>b.addEventListener('click', ()=>{
+    if(confirm('حذف هذا المدرّس؟')){ teachers = teachers.filter(t=>t.id!==b.dataset.id); renderTeachers(); renderTeacherOptions(); }
+  }));
+}
+function editTeacher(id){
+  const t = teachers.find(x=>x.id===id);
+  if(!t) return;
+  editingTeacherId = id;
+  document.getElementById('teacherFormTitle').textContent = '✏️ تعديل المدرّس';
+  document.getElementById('tCancelBtn').style.display='inline-block';
+  document.getElementById('tName').value=t.name;
+  document.getElementById('tSubject').value=t.subject;
+  document.getElementById('tStage').value=t.stage;
+  document.getElementById('tGov').value=t.governorate;
+  document.getElementById('tArea').value=t.area;
+  document.getElementById('tYoutube').value=t.youtube;
+  document.getElementById('tPhotoUrl').value = t.photo && !t.photo.startsWith('data:') ? t.photo : '';
+  tPhotoData = t.photo && t.photo.startsWith('data:') ? t.photo : '';
+  document.getElementById('tPhotoStatus').textContent = tPhotoData ? '✅ صورة مرفوعة محفوظة' : '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- SAVE BOOKLET ---------- */
+function renderTeacherOptions(){
+  const sel = document.getElementById('bTeacher');
+  const current = sel.value;
+  sel.innerHTML = '<option value="">— بدون مدرّس محدد —</option>' + teachers.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  sel.value = current;
+}
+document.getElementById('bSaveBtn').addEventListener('click', ()=>{
+  const name=document.getElementById('bName').value.trim();
+  if(!name){ alert('أدخل اسم الملزمة'); return; }
+  const fileUrl = bFileData || document.getElementById('bFileUrl').value.trim();
+  if(!fileUrl){ alert('أضف رابط أو ارفع ملف للملزمة'); return; }
+  const obj = {
+    id: editingBookletId || uid(),
+    name, subject: document.getElementById('bSubject').value.trim(),
+    stage: document.getElementById('bStage').value,
+    teacherId: document.getElementById('bTeacher').value,
+    file: fileUrl
+  };
+  if(editingBookletId){
+    booklets = booklets.map(b=>b.id===editingBookletId?obj:b);
+  } else {
+    booklets.push(obj);
+  }
+  resetBookletForm();
+  renderBooklets();
+});
+function resetBookletForm(){
+  editingBookletId=null; bFileData='';
+  document.getElementById('bookletFormTitle').textContent = '➕ إضافة ملزمة جديدة';
+  document.getElementById('bCancelBtn').style.display='none';
+  ['bName','bSubject','bFileUrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bTeacher').value='';
+  document.getElementById('bFileStatus').textContent='';
+  document.getElementById('bFileUpload').value='';
+}
+document.getElementById('bCancelBtn').addEventListener('click', resetBookletForm);
+
+function renderBooklets(){
+  const wrap = document.getElementById('bookletsList');
+  if(booklets.length===0){ wrap.innerHTML = '<div class="empty">لا توجد ملازم بعد</div>'; return; }
+  wrap.innerHTML = booklets.map(b=>{
+    const teacher = teachers.find(t=>t.id===b.teacherId);
+    return `<div class="item">
+      <div class="item-main">
+        <div class="item-info"><b>${b.name}</b><span>${b.subject} · ${b.stage} ${teacher?' · '+teacher.name:''}</span></div>
+      </div>
+      <div class="item-actions">
+        <button class="edit" data-id="${b.id}">تعديل</button>
+        <button class="del" data-id="${b.id}">حذف</button>
+      </div>
+    </div>`;
+  }).join('');
+  wrap.querySelectorAll('.edit').forEach(bt=>bt.addEventListener('click', ()=>editBooklet(bt.dataset.id)));
+  wrap.querySelectorAll('.del').forEach(bt=>bt.addEventListener('click', ()=>{
+    if(confirm('حذف هذه الملزمة؟')){ booklets = booklets.filter(x=>x.id!==bt.dataset.id); renderBooklets(); }
+  }));
+}
+function editBooklet(id){
+  const b = booklets.find(x=>x.id===id);
+  if(!b) return;
+  editingBookletId = id;
+  document.getElementById('bookletFormTitle').textContent = '✏️ تعديل الملزمة';
+  document.getElementById('bCancelBtn').style.display='inline-block';
+  document.getElementById('bName').value=b.name;
+  document.getElementById('bSubject').value=b.subject;
+  document.getElementById('bStage').value=b.stage;
+  document.getElementById('bTeacher').value=b.teacherId||'';
+  document.getElementById('bFileUrl').value = b.file && !b.file.startsWith('data:') ? b.file : '';
+  bFileData = b.file && b.file.startsWith('data:') ? b.file : '';
+  document.getElementById('bFileStatus').textContent = bFileData ? '✅ ملف مرفوع محفوظ' : '';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+/* ---------- EXPORT / IMPORT / CLEAR ---------- */
+document.getElementById('exportBtn').addEventListener('click', ()=>{
+  const data = { teachers, booklets, exportedAt: new Date().toISOString() };
+  const blob = new Blob([JSON.stringify(data, null, 1)], {type:'application/json'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'teachers.json';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+document.getElementById('importInput').addEventListener('change', e=>{
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = ()=>{
+    try{
+      const data = JSON.parse(reader.result);
+      teachers = data.teachers || [];
+      booklets = data.booklets || [];
+      renderTeachers(); renderTeacherOptions(); renderBooklets();
+      alert('تم استيراد البيانات بنجاح');
+    }catch(err){ alert('ملف غير صالح'); }
+  };
+  reader.readAsText(file);
+  e.target.value='';
+});
+document.getElementById('clearBtn').addEventListener('click', ()=>{
+  if(confirm('هل أنت متأكد من تفريغ كل البيانات؟ (لن يتأثر أي ملف مصدَّر مسبقًا)')){
+    teachers=[]; booklets=[]; renderTeachers(); renderTeacherOptions(); renderBooklets();
+  }
+});
+
+renderTeachers(); renderTeacherOptions(); renderBooklets();
+</script>
+</body>
+</html>
