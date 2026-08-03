@@ -121,7 +121,7 @@
     <div class="tab" data-tab="news">📰 الأخبار</div>
   </div>
 
-  <!-- ================= TEACHERS ================= -->
+  <!-- ================= TEACHERS (simplified: no photo/bio/social/youtube) ================= -->
   <div class="section active" id="sec-teachers">
     <div class="card-box">
       <h3 id="teacherFormTitle" style="margin-bottom:14px; font-size:15px;">➕ إضافة مدرّس جديد</h3>
@@ -138,8 +138,10 @@
             <optgroup label="المتوسطة">
               <option>الأول المتوسط</option><option>الثاني المتوسط</option><option>الثالث المتوسط</option>
             </optgroup>
-            <optgroup label="الإعدادية">
+            <optgroup label="الإعدادية - علمي">
               <option selected>الرابع العلمي</option><option>الخامس العلمي</option><option>السادس العلمي</option>
+            </optgroup>
+            <optgroup label="الإعدادية - أدبي">
               <option>الرابع الأدبي</option><option>الخامس الأدبي</option><option>السادس الأدبي</option>
             </optgroup>
             <optgroup label="التعليم المهني">
@@ -147,31 +149,15 @@
             </optgroup>
           </select>
         </div>
-        <div class="field"><label>المحافظة</label>
+        <div class="field"><label>المحافظة (اختياري)</label>
           <select id="tGov">
+            <option value="">— غير محدد —</option>
             <option>بغداد</option><option>البصرة</option><option>نينوى</option><option>أربيل</option><option>النجف</option>
             <option>كربلاء</option><option>ذي قار</option><option>الأنبار</option><option>ديالى</option><option>كركوك</option>
             <option>بابل</option><option>واسط</option><option>ميسان</option><option>القادسية</option><option>المثنى</option>
             <option>صلاح الدين</option><option>دهوك</option><option>السليمانية</option>
           </select>
         </div>
-        <div class="field"><label>رابط اليوتيوب (اختياري)</label><input type="text" id="tYoutube" placeholder="https://youtube.com/..."></div>
-      </div>
-      <div class="field"><label>نبذة عن المدرّس (اختياري)</label><textarea id="tBio" placeholder="سطر أو سطرين تعريفية..."></textarea></div>
-      <div class="field">
-        <label>الصورة الشخصية</label>
-        <div class="upload-row">
-          <input type="text" id="tPhotoUrl" placeholder="الصق رابط صورة (اختياري)..." style="flex:1;">
-          <label class="btn ghost" for="tPhotoFile">📷 أو ارفع صورة</label>
-          <input type="file" id="tPhotoFile" accept="image/*">
-          <span class="file-status" id="tPhotoStatus"></span>
-        </div>
-      </div>
-      <div class="grid2">
-        <div class="field"><label>رابط فيسبوك (اختياري)</label><input type="text" id="tFacebook" placeholder="https://facebook.com/..."></div>
-        <div class="field"><label>رابط تيليجرام (اختياري)</label><input type="text" id="tTelegram" placeholder="https://t.me/..."></div>
-        <div class="field"><label>رابط انستقرام (اختياري)</label><input type="text" id="tInstagram" placeholder="https://instagram.com/..."></div>
-        <div class="field"><label>رابط واتساب (اختياري)</label><input type="text" id="tWhatsapp" placeholder="https://wa.me/..."></div>
       </div>
       <div class="bar" style="position:static; margin:0; padding:0; background:none; border:none;">
         <button class="btn" id="tSaveBtn">💾 حفظ المدرّس</button>
@@ -181,38 +167,24 @@
     <div class="list" id="teachersList"></div>
   </div>
 
-  <!-- ================= MALAZIM ================= -->
+  <!-- ================= MALAZIM (linked to teacher by ID) ================= -->
   <div class="section" id="sec-malazim">
     <div class="card-box">
       <h3 id="malazimFormTitle" style="margin-bottom:14px; font-size:15px;">➕ إضافة ملزمة جديدة</h3>
       <input type="hidden" id="malazimEditId">
       <div class="grid2">
-        <div class="field"><label>اسم الملزمة</label><input type="text" id="mName" placeholder="مثال: ملزمة الرياضيات - الفصل الأول"></div>
-        <div class="field"><label>اسم المدرّس</label>
-          <select id="mTeacher"><option value="">— بدون مدرّس محدد —</option></select>
-        </div>
-        <div class="field"><label>المادة</label><input type="text" id="mSubject" placeholder="مثال: الرياضيات"></div>
-        <div class="field"><label>الصف الدراسي</label>
-          <select id="mStage">
-            <optgroup label="الابتدائية">
-              <option>الأول الابتدائي</option><option>الثاني الابتدائي</option><option>الثالث الابتدائي</option>
-              <option>الرابع الابتدائي</option><option>الخامس الابتدائي</option><option>السادس الابتدائي</option>
-            </optgroup>
-            <optgroup label="المتوسطة">
-              <option>الأول المتوسط</option><option>الثاني المتوسط</option><option>الثالث المتوسط</option>
-            </optgroup>
-            <optgroup label="الإعدادية">
-              <option selected>الرابع العلمي</option><option>الخامس العلمي</option><option>السادس العلمي</option>
-              <option>الرابع الأدبي</option><option>الخامس الأدبي</option><option>السادس الأدبي</option>
-            </optgroup>
-            <optgroup label="التعليم المهني">
-              <option>الصناعي</option><option>التجاري</option><option>الزراعي</option><option>الحاسوب وتقنية المعلومات</option>
-            </optgroup>
-          </select>
+        <div class="field"><label>عنوان الملزمة</label><input type="text" id="mName" placeholder="مثال: الجزء الأول"></div>
+        <div class="field"><label>المدرّس</label>
+          <select id="mTeacher"><option value="">— اختر مدرّسًا —</option></select>
         </div>
         <div class="field"><label>نوع الملزمة</label>
-          <select id="mType"><option value="ملخص">ملخص</option><option value="أسئلة">أسئلة</option><option value="شرح">شرح</option><option value="نماذج امتحانات">نماذج امتحانات</option><option value="أخرى">أخرى</option></select>
+          <select id="mType"><option value="ملخص">ملخص</option><option value="أسئلة">أسئلة</option><option value="شرح">شرح</option><option value="مراجعة مركزة">مراجعة مركزة</option><option value="مرشحات">مرشحات</option><option value="وزاريات">وزاريات</option><option value="أخرى">أخرى</option></select>
         </div>
+        <div class="field"><label>السنة الدراسية</label><input type="text" id="mYear" placeholder="مثال: 2025-2026"></div>
+        <div class="field"><label>الحالة</label>
+          <select id="mStatus"><option value="متاح">متاح (يظهر للطلاب)</option><option value="غير متاح">غير متاح (مخفي مؤقتًا)</option></select>
+        </div>
+        <div class="field"><label>عدد التحميلات (اختياري)</label><input type="number" id="mDownloads" value="0" min="0"></div>
       </div>
       <div class="field">
         <label>رابط التحميل</label>
@@ -262,7 +234,7 @@
 <script>
 let teachers = [], malazim = [], news = [];
 let editingTeacherId = null, editingMalazimId = null, editingNewsId = null;
-let tPhotoData = '', mFileData = '', nImageData = '';
+let mFileData = '', nImageData = '';
 
 /* ---------- TABS ---------- */
 document.querySelectorAll('.tab').forEach(t=>{
@@ -282,34 +254,38 @@ function fileToBase64(file, cb){
 }
 
 /* ================= TEACHERS ================= */
-document.getElementById('tPhotoFile').addEventListener('change', e=>{
-  const file = e.target.files[0];
-  if(!file) return;
-  fileToBase64(file, data=>{
-    tPhotoData = data;
-    document.getElementById('tPhotoStatus').textContent = '✅ تم رفع: '+file.name;
-    document.getElementById('tPhotoUrl').value = '';
-  });
-});
+/* Decompose the friendly dropdown label into separate {stage, branch} fields
+   per the project's data schema (اعدادية grades share bare labels disambiguated
+   by a separate branch field; other stages have no branch). */
+const STAGE_BRANCH_MAP = {
+  'الرابع العلمي': {stage:'الرابع', branch:'علمي'},
+  'الخامس العلمي': {stage:'الخامس', branch:'علمي'},
+  'السادس العلمي': {stage:'السادس', branch:'علمي'},
+  'الرابع الأدبي': {stage:'الرابع', branch:'أدبي'},
+  'الخامس الأدبي': {stage:'الخامس', branch:'أدبي'},
+  'السادس الأدبي': {stage:'السادس', branch:'أدبي'}
+};
+function decomposeStage(label){
+  return STAGE_BRANCH_MAP[label] || {stage: label, branch: ''};
+}
+function recomposeStage(stage, branch){
+  if(branch==='علمي') return stage+' العلمي';
+  if(branch==='أدبي') return stage+' الأدبي';
+  return stage;
+}
+function labelForStageBranch(stage, branch){ return recomposeStage(stage, branch); }
 
 document.getElementById('tSaveBtn').addEventListener('click', ()=>{
   const name=document.getElementById('tName').value.trim();
   if(!name){ alert('أدخل اسم المدرّس'); return; }
-  const social = {
-    facebook: document.getElementById('tFacebook').value.trim(),
-    telegram: document.getElementById('tTelegram').value.trim(),
-    instagram: document.getElementById('tInstagram').value.trim(),
-    whatsapp: document.getElementById('tWhatsapp').value.trim()
-  };
+  const {stage, branch} = decomposeStage(document.getElementById('tStage').value);
   const obj = {
     id: editingTeacherId || uid('t'),
-    name, subject: document.getElementById('tSubject').value.trim(),
-    stage: document.getElementById('tStage').value,
-    governorate: document.getElementById('tGov').value,
-    bio: document.getElementById('tBio').value.trim(),
-    youtube: document.getElementById('tYoutube').value.trim(),
-    photo: tPhotoData || document.getElementById('tPhotoUrl').value.trim(),
-    social
+    name,
+    subject: document.getElementById('tSubject').value.trim(),
+    stage,
+    branch,
+    governorate: document.getElementById('tGov').value
   };
   if(editingTeacherId){ teachers = teachers.map(t=>t.id===editingTeacherId?obj:t); }
   else { teachers.push(obj); }
@@ -317,12 +293,12 @@ document.getElementById('tSaveBtn').addEventListener('click', ()=>{
   renderTeachers(); renderTeacherOptions();
 });
 function resetTeacherForm(){
-  editingTeacherId = null; tPhotoData='';
+  editingTeacherId = null;
   document.getElementById('teacherFormTitle').textContent = '➕ إضافة مدرّس جديد';
   document.getElementById('tCancelBtn').style.display='none';
-  ['tName','tSubject','tYoutube','tPhotoUrl','tBio','tFacebook','tTelegram','tInstagram','tWhatsapp'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('tPhotoStatus').textContent='';
-  document.getElementById('tPhotoFile').value='';
+  document.getElementById('tName').value='';
+  document.getElementById('tSubject').value='';
+  document.getElementById('tGov').value='';
 }
 document.getElementById('tCancelBtn').addEventListener('click', resetTeacherForm);
 
@@ -332,8 +308,7 @@ function renderTeachers(){
   wrap.innerHTML = teachers.map(t=>`
     <div class="item">
       <div class="item-main">
-        <img src="${t.photo||''}" onerror="this.style.display='none'">
-        <div class="item-info"><b>${t.name}</b><span>${t.subject||''} · ${t.stage||''}${t.branch?' · '+t.branch:''} · ${t.governorate||''}</span></div>
+        <div class="item-info"><b>${t.name}</b><span>${t.subject||''} · ${recomposeStage(t.stage,t.branch)}${t.governorate?' · '+t.governorate:''}</span></div>
       </div>
       <div class="item-actions">
         <button class="edit" data-id="${t.id}">تعديل</button>
@@ -342,7 +317,9 @@ function renderTeachers(){
     </div>`).join('');
   wrap.querySelectorAll('.edit').forEach(b=>b.addEventListener('click', ()=>editTeacher(b.dataset.id)));
   wrap.querySelectorAll('.del').forEach(b=>b.addEventListener('click', ()=>{
-    if(confirm('حذف هذا المدرّس؟')){ teachers = teachers.filter(t=>t.id!==b.dataset.id); renderTeachers(); renderTeacherOptions(); }
+    if(confirm('حذف هذا المدرّس؟ (الملازم المرتبطة به تبقى لكن بدون مدرّس مرتبط)')){
+      teachers = teachers.filter(t=>t.id!==b.dataset.id); renderTeachers(); renderTeacherOptions();
+    }
   }));
 }
 function editTeacher(id){
@@ -353,26 +330,16 @@ function editTeacher(id){
   document.getElementById('tCancelBtn').style.display='inline-block';
   document.getElementById('tName').value=t.name||'';
   document.getElementById('tSubject').value=t.subject||'';
-  document.getElementById('tStage').value=t.stage||'اعدادية';
-  document.getElementById('tGov').value=t.governorate||'بغداد';
-  document.getElementById('tBio').value=t.bio||'';
-  document.getElementById('tYoutube').value=t.youtube||'';
-  const social = t.social || {};
-  document.getElementById('tFacebook').value=social.facebook||'';
-  document.getElementById('tTelegram').value=social.telegram||'';
-  document.getElementById('tInstagram').value=social.instagram||'';
-  document.getElementById('tWhatsapp').value=social.whatsapp||'';
-  document.getElementById('tPhotoUrl').value = t.photo && !t.photo.startsWith('data:') ? t.photo : '';
-  tPhotoData = t.photo && t.photo.startsWith('data:') ? t.photo : '';
-  document.getElementById('tPhotoStatus').textContent = tPhotoData ? '✅ صورة مرفوعة محفوظة' : '';
+  document.getElementById('tStage').value=labelForStageBranch(t.stage||'الرابع','علمي'===t.branch?'علمي':(t.branch||''));
+  document.getElementById('tGov').value=t.governorate||'';
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
-/* ================= MALAZIM ================= */
+/* ================= MALAZIM (linked by teacher ID) ================= */
 function renderTeacherOptions(){
   const sel = document.getElementById('mTeacher');
   const current = sel.value;
-  sel.innerHTML = '<option value="">— بدون مدرّس محدد —</option>' + teachers.map(t=>`<option value="${t.name}">${t.name}</option>`).join('');
+  sel.innerHTML = '<option value="">— اختر مدرّسًا —</option>' + teachers.map(t=>`<option value="${t.id}">${t.name} (${t.subject||''} - ${t.stage||''})</option>`).join('');
   sel.value = current;
 }
 
@@ -390,18 +357,21 @@ document.getElementById('mFileUpload').addEventListener('change', e=>{
 });
 
 document.getElementById('mSaveBtn').addEventListener('click', ()=>{
-  const name=document.getElementById('mName').value.trim();
-  if(!name){ alert('أدخل اسم الملزمة'); return; }
-  const downloadUrl = mFileData || document.getElementById('mFileUrl').value.trim();
-  if(!downloadUrl){ alert('أضف رابط أو ارفع ملف للملزمة'); return; }
+  const title=document.getElementById('mName').value.trim();
+  if(!title){ alert('أدخل عنوان الملزمة'); return; }
+  const teacherId = document.getElementById('mTeacher').value;
+  if(!teacherId){ alert('اختر مدرّسًا لربط الملزمة به'); return; }
+  const url = mFileData || document.getElementById('mFileUrl').value.trim();
+  if(!url){ alert('أضف رابط أو ارفع ملف للملزمة'); return; }
   const obj = {
     id: editingMalazimId || uid('m'),
-    name,
-    teacherName: document.getElementById('mTeacher').value,
-    subject: document.getElementById('mSubject').value.trim(),
-    stage: document.getElementById('mStage').value,
+    teacherId,
+    title,
     type: document.getElementById('mType').value,
-    downloadUrl
+    year: document.getElementById('mYear').value.trim(),
+    status: document.getElementById('mStatus').value,
+    downloads: parseInt(document.getElementById('mDownloads').value)||0,
+    url
   };
   if(editingMalazimId){ malazim = malazim.map(m=>m.id===editingMalazimId?obj:m); }
   else { malazim.push(obj); }
@@ -412,19 +382,28 @@ function resetMalazimForm(){
   editingMalazimId=null; mFileData='';
   document.getElementById('malazimFormTitle').textContent = '➕ إضافة ملزمة جديدة';
   document.getElementById('mCancelBtn').style.display='none';
-  ['mName','mSubject','mFileUrl'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('mName').value='';
   document.getElementById('mTeacher').value='';
+  document.getElementById('mYear').value='';
+  document.getElementById('mStatus').value='متاح';
+  document.getElementById('mDownloads').value='0';
+  document.getElementById('mFileUrl').value='';
   document.getElementById('mFileStatus').textContent='';
   document.getElementById('mFileUpload').value='';
 }
 document.getElementById('mCancelBtn').addEventListener('click', resetMalazimForm);
+
+function teacherNameById(id){
+  const t = teachers.find(x=>x.id===id);
+  return t ? t.name : '(مدرّس محذوف)';
+}
 
 function renderMalazim(){
   const wrap = document.getElementById('malazimList');
   if(malazim.length===0){ wrap.innerHTML = '<div class="empty">لا توجد ملازم بعد</div>'; return; }
   wrap.innerHTML = malazim.map(m=>`<div class="item">
       <div class="item-main">
-        <div class="item-info"><b>${m.name}<span class="status-badge">${m.type||''}</span></b><span>${m.subject||''} · ${m.stage||''}${m.teacherName?' · '+m.teacherName:''}</span></div>
+        <div class="item-info"><b>${m.title}<span class="status-badge">${m.type||''}</span>${m.status==='غير متاح'?'<span class="status-badge" style="background:#FBE4E4; color:#9C4A3C;">مخفي</span>':''}</b><span>${teacherNameById(m.teacherId)}${m.year?' · '+m.year:''}</span></div>
       </div>
       <div class="item-actions">
         <button class="edit" data-id="${m.id}">تعديل</button>
@@ -442,13 +421,14 @@ function editMalazim(id){
   editingMalazimId = id;
   document.getElementById('malazimFormTitle').textContent = '✏️ تعديل الملزمة';
   document.getElementById('mCancelBtn').style.display='inline-block';
-  document.getElementById('mName').value=m.name||'';
-  document.getElementById('mTeacher').value=m.teacherName||'';
-  document.getElementById('mSubject').value=m.subject||'';
-  document.getElementById('mStage').value=m.stage||'اعدادية';
+  document.getElementById('mName').value=m.title||'';
+  document.getElementById('mTeacher').value=m.teacherId||'';
   document.getElementById('mType').value=m.type||'ملخص';
-  document.getElementById('mFileUrl').value = m.downloadUrl && !m.downloadUrl.startsWith('data:') ? m.downloadUrl : '';
-  mFileData = m.downloadUrl && m.downloadUrl.startsWith('data:') ? m.downloadUrl : '';
+  document.getElementById('mYear').value=m.year||'';
+  document.getElementById('mStatus').value=m.status||'متاح';
+  document.getElementById('mDownloads').value=m.downloads||0;
+  document.getElementById('mFileUrl').value = m.url && !m.url.startsWith('data:') ? m.url : '';
+  mFileData = m.url && m.url.startsWith('data:') ? m.url : '';
   document.getElementById('mFileStatus').textContent = mFileData ? '✅ ملف مرفوع محفوظ' : '';
   window.scrollTo({top:0, behavior:'smooth'});
 }
