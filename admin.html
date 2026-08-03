@@ -23,6 +23,15 @@
   body{ background:var(--bg); color:var(--ink); font-family:'Tajawal',sans-serif; padding-bottom:calc(80px + var(--safe-b)); padding-top:var(--safe-t); }
   .wrap{max-width:900px; margin:0 auto; padding:18px 16px; padding-inline:calc(16px + var(--safe-l)) calc(16px + var(--safe-r));}
   h1{font-size:20px; font-weight:900; margin-bottom:6px; line-height:1.4;}
+  .toast{
+    position:fixed; top:calc(16px + var(--safe-t)); left:50%; transform:translateX(-50%) translateY(-20px);
+    background:var(--ink); color:#fff; padding:13px 22px; border-radius:12px; font-size:14px; font-weight:700;
+    box-shadow:0 12px 26px -10px rgba(0,0,0,.4); z-index:200; opacity:0; pointer-events:none;
+    transition:opacity .25s ease, transform .25s ease; max-width:90vw; text-align:center;
+  }
+  .toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+  .toast.success{background:var(--green-deep);}
+  .toast.error{background:var(--red);}
   .sub{color:var(--ink-soft); font-size:13px; margin-bottom:18px; line-height:1.8;}
   .warn{background:#FBEFD9; border-right:4px solid var(--amber); padding:13px 16px; border-radius:10px; font-size:12.5px; color:#7A5411; margin-bottom:20px; line-height:1.8;}
 
@@ -104,6 +113,7 @@
 </style>
 </head>
 <body>
+<div class="toast" id="toast"></div>
 <div class="wrap">
   <h1>🛠️ لوحة إدارة محتوى مستقبلي</h1>
   <p class="sub">أضف/عدّل/احذف المدرسين والملازم والأخبار من هنا. بعد أي تعديل، صدّر الملفات الثلاثة وارفعها بجانب index.html على GitHub/Netlify.</p>
@@ -236,6 +246,11 @@ let teachers = [], malazim = [], news = [];
 let editingTeacherId = null, editingMalazimId = null, editingNewsId = null;
 let mFileData = '', nImageData = '';
 
+window.addEventListener('error', e=>{
+  console.error('خطأ JavaScript غير متوقع:', e.error || e.message);
+  showToast('❌ حدث خطأ برمجي — افتح Console (F12) لمعرفة التفاصيل', 'error');
+});
+
 /* ---------- TABS ---------- */
 document.querySelectorAll('.tab').forEach(t=>{
   t.addEventListener('click', ()=>{
@@ -251,6 +266,14 @@ function fileToBase64(file, cb){
   const reader = new FileReader();
   reader.onload = ()=>cb(reader.result);
   reader.readAsDataURL(file);
+}
+let toastTimer=null;
+function showToast(msg, type){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast show' + (type ? ' '+type : '');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>{ t.classList.remove('show'); }, 3200);
 }
 
 /* ================= TEACHERS ================= */
@@ -276,21 +299,30 @@ function recomposeStage(stage, branch){
 function labelForStageBranch(stage, branch){ return recomposeStage(stage, branch); }
 
 document.getElementById('tSaveBtn').addEventListener('click', ()=>{
-  const name=document.getElementById('tName').value.trim();
-  if(!name){ alert('أدخل اسم المدرّس'); return; }
-  const {stage, branch} = decomposeStage(document.getElementById('tStage').value);
-  const obj = {
-    id: editingTeacherId || uid('t'),
-    name,
-    subject: document.getElementById('tSubject').value.trim(),
-    stage,
-    branch,
-    governorate: document.getElementById('tGov').value
-  };
-  if(editingTeacherId){ teachers = teachers.map(t=>t.id===editingTeacherId?obj:t); }
-  else { teachers.push(obj); }
-  resetTeacherForm();
-  renderTeachers(); renderTeacherOptions();
+  try{
+    const name=document.getElementById('tName').value.trim();
+    const subject=document.getElementById('tSubject').value.trim();
+    if(!name){ showToast('⚠️ الرجاء إدخال اسم المدرّس', 'error'); document.getElementById('tName').focus(); return; }
+    if(!subject){ showToast('⚠️ الرجاء إدخال المادة', 'error'); document.getElementById('tSubject').focus(); return; }
+    const {stage, branch} = decomposeStage(document.getElementById('tStage').value);
+    const obj = {
+      id: editingTeacherId || uid('t'),
+      name,
+      subject,
+      stage,
+      branch,
+      governorate: document.getElementById('tGov').value
+    };
+    const wasEditing = !!editingTeacherId;
+    if(editingTeacherId){ teachers = teachers.map(t=>t.id===editingTeacherId?obj:t); }
+    else { teachers.push(obj); }
+    resetTeacherForm();
+    renderTeachers(); renderTeacherOptions();
+    showToast(wasEditing ? '✅ تم تحديث بيانات المدرّس بنجاح' : '✅ تم حفظ المدرّس بنجاح — لا تنسَ الضغط على "تصدير الكل" لتحديث الملفات', 'success');
+  } catch(err){
+    console.error('خطأ أثناء حفظ المدرّس:', err);
+    showToast('❌ حدث خطأ غير متوقع أثناء الحفظ — افتح Console لمزيد من التفاصيل', 'error');
+  }
 });
 function resetTeacherForm(){
   editingTeacherId = null;
@@ -357,26 +389,33 @@ document.getElementById('mFileUpload').addEventListener('change', e=>{
 });
 
 document.getElementById('mSaveBtn').addEventListener('click', ()=>{
-  const title=document.getElementById('mName').value.trim();
-  if(!title){ alert('أدخل عنوان الملزمة'); return; }
-  const teacherId = document.getElementById('mTeacher').value;
-  if(!teacherId){ alert('اختر مدرّسًا لربط الملزمة به'); return; }
-  const url = mFileData || document.getElementById('mFileUrl').value.trim();
-  if(!url){ alert('أضف رابط أو ارفع ملف للملزمة'); return; }
-  const obj = {
-    id: editingMalazimId || uid('m'),
-    teacherId,
-    title,
-    type: document.getElementById('mType').value,
-    year: document.getElementById('mYear').value.trim(),
-    status: document.getElementById('mStatus').value,
-    downloads: parseInt(document.getElementById('mDownloads').value)||0,
-    url
-  };
-  if(editingMalazimId){ malazim = malazim.map(m=>m.id===editingMalazimId?obj:m); }
-  else { malazim.push(obj); }
-  resetMalazimForm();
-  renderMalazim();
+  try{
+    const title=document.getElementById('mName').value.trim();
+    if(!title){ showToast('⚠️ الرجاء إدخال عنوان الملزمة', 'error'); document.getElementById('mName').focus(); return; }
+    const teacherId = document.getElementById('mTeacher').value;
+    if(!teacherId){ showToast('⚠️ الرجاء اختيار المدرّس المرتبط بالملزمة', 'error'); document.getElementById('mTeacher').focus(); return; }
+    const url = mFileData || document.getElementById('mFileUrl').value.trim();
+    if(!url){ showToast('⚠️ الرجاء إضافة رابط أو رفع ملف للملزمة', 'error'); document.getElementById('mFileUrl').focus(); return; }
+    const obj = {
+      id: editingMalazimId || uid('m'),
+      teacherId,
+      title,
+      type: document.getElementById('mType').value,
+      year: document.getElementById('mYear').value.trim(),
+      status: document.getElementById('mStatus').value,
+      downloads: parseInt(document.getElementById('mDownloads').value)||0,
+      url
+    };
+    const wasEditing = !!editingMalazimId;
+    if(editingMalazimId){ malazim = malazim.map(m=>m.id===editingMalazimId?obj:m); }
+    else { malazim.push(obj); }
+    resetMalazimForm();
+    renderMalazim();
+    showToast(wasEditing ? '✅ تم تحديث الملزمة بنجاح' : '✅ تم حفظ الملزمة بنجاح — لا تنسَ الضغط على "تصدير الكل"', 'success');
+  } catch(err){
+    console.error('خطأ أثناء حفظ الملزمة:', err);
+    showToast('❌ حدث خطأ غير متوقع أثناء الحفظ — افتح Console لمزيد من التفاصيل', 'error');
+  }
 });
 function resetMalazimForm(){
   editingMalazimId=null; mFileData='';
@@ -445,19 +484,26 @@ document.getElementById('nImageFile').addEventListener('change', e=>{
 });
 
 document.getElementById('nSaveBtn').addEventListener('click', ()=>{
-  const title=document.getElementById('nTitle').value.trim();
-  if(!title){ alert('أدخل عنوان الخبر'); return; }
-  const obj = {
-    id: editingNewsId || uid('n'),
-    title,
-    description: document.getElementById('nDesc').value.trim(),
-    date: document.getElementById('nDate').value,
-    image: nImageData || document.getElementById('nImageUrl').value.trim()
-  };
-  if(editingNewsId){ news = news.map(n=>n.id===editingNewsId?obj:n); }
-  else { news.push(obj); }
-  resetNewsForm();
-  renderNews();
+  try{
+    const title=document.getElementById('nTitle').value.trim();
+    if(!title){ showToast('⚠️ الرجاء إدخال عنوان الخبر', 'error'); document.getElementById('nTitle').focus(); return; }
+    const obj = {
+      id: editingNewsId || uid('n'),
+      title,
+      description: document.getElementById('nDesc').value.trim(),
+      date: document.getElementById('nDate').value,
+      image: nImageData || document.getElementById('nImageUrl').value.trim()
+    };
+    const wasEditing = !!editingNewsId;
+    if(editingNewsId){ news = news.map(n=>n.id===editingNewsId?obj:n); }
+    else { news.push(obj); }
+    resetNewsForm();
+    renderNews();
+    showToast(wasEditing ? '✅ تم تحديث الخبر بنجاح' : '✅ تم حفظ الخبر بنجاح — لا تنسَ الضغط على "تصدير الكل"', 'success');
+  } catch(err){
+    console.error('خطأ أثناء حفظ الخبر:', err);
+    showToast('❌ حدث خطأ غير متوقع أثناء الحفظ — افتح Console لمزيد من التفاصيل', 'error');
+  }
 });
 function resetNewsForm(){
   editingNewsId=null; nImageData='';
@@ -511,9 +557,15 @@ function downloadJSON(filename, obj){
   URL.revokeObjectURL(url);
 }
 document.getElementById('exportAllBtn').addEventListener('click', ()=>{
-  downloadJSON('teachers.json', {teachers, exportedAt:new Date().toISOString()});
-  setTimeout(()=>downloadJSON('malazim.json', {malazim, exportedAt:new Date().toISOString()}), 300);
-  setTimeout(()=>downloadJSON('news.json', {news, exportedAt:new Date().toISOString()}), 600);
+  try{
+    downloadJSON('teachers.json', {teachers, exportedAt:new Date().toISOString()});
+    setTimeout(()=>downloadJSON('malazim.json', {malazim, exportedAt:new Date().toISOString()}), 300);
+    setTimeout(()=>downloadJSON('news.json', {news, exportedAt:new Date().toISOString()}), 600);
+    showToast(`✅ جاري تنزيل الملفات الثلاثة (${teachers.length} مدرّس، ${malazim.length} ملزمة، ${news.length} خبر)`, 'success');
+  } catch(err){
+    console.error('خطأ أثناء التصدير:', err);
+    showToast('❌ حدث خطأ أثناء التصدير — افتح Console لمزيد من التفاصيل', 'error');
+  }
 });
 document.getElementById('importInput').addEventListener('change', e=>{
   const files = [...e.target.files];
