@@ -183,6 +183,10 @@
   .card.top{border-color:var(--green);}
   .top-tag{ position:absolute; top:-9px; right:14px; background:var(--green); color:#fff; font-size:10.5px; font-weight:700;
     padding:3px 10px; border-radius:99px; }
+  .card-save-btn{ position:absolute; top:10px; left:10px; background:var(--field); border:1px solid var(--line); border-radius:10px;
+    width:30px; height:30px; font-size:14px; cursor:pointer; transition:.15s; }
+  .card-save-btn:hover{ background:#FFF7E0; border-color:var(--amber); transform:scale(1.08); }
+  .card-save-btn.saved{ background:#FFF7E0; border-color:var(--amber); }
   .card-main{flex:1; min-width:0;}
   .card-name{font-size:14.5px; font-weight:700; color:var(--ink); line-height:1.5;}
   .card-name .col{color:var(--green-deep);}
@@ -265,7 +269,49 @@
   .ask-result-card .go{ font-size:11.5px; color:var(--green-deep); font-weight:700; white-space:nowrap; }
   .ask-faq-answer{ background:var(--card); border:1px solid var(--line); border-radius:16px; padding:16px 18px; font-size:13.5px; line-height:2; margin-bottom:10px; }
   .ask-empty{ text-align:center; padding:36px 20px; color:var(--ink-mute); font-size:13.5px; }
+
+  /* ACCOUNT */
+  .acc-profile-card{ background:var(--card); border:1px solid var(--line); border-radius:20px; padding:22px 20px; margin-bottom:18px; }
+  .acc-profile-card .name{ font-size:17px; font-weight:800; margin-bottom:2px; }
+  .acc-profile-card .meta{ font-size:12.5px; color:var(--ink-mute); }
+  .acc-avg-badge{ display:inline-flex; align-items:center; gap:6px; background:var(--green-light); color:var(--green-deep);
+    border-radius:12px; padding:8px 14px; font-weight:700; font-size:13px; margin-top:12px; }
+  .acc-section-title{ font-size:14px; font-weight:700; margin:22px 0 10px; display:flex; align-items:center; gap:6px; }
+  .acc-fav-item, .acc-hist-item{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px;
+    margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px; }
+  .acc-fav-item .main, .acc-hist-item .main{ font-size:13px; font-weight:700; }
+  .acc-fav-item .sub, .acc-hist-item .sub{ font-size:11.5px; color:var(--ink-mute); margin-top:3px; }
+  .acc-remove-btn{ background:none; border:none; color:var(--red); cursor:pointer; font-size:16px; padding:4px 8px; }
+  .fav-star{ background:none; border:none; cursor:pointer; font-size:19px; color:var(--amber); line-height:1; padding:0 4px; }
+  .fav-star.inactive{ color:var(--ink-mute); opacity:.5; }
+  .acc-form input, .acc-form select{ width:100%; background:var(--field); border:1.5px solid var(--line); border-radius:12px;
+    padding:12px 14px; font-size:14px; font-family:inherit; margin-bottom:12px; }
+  .acc-form input:focus, .acc-form select:focus{ outline:none; border-color:var(--green); }
+  .acc-logout-link{ font-size:12px; color:var(--ink-mute); cursor:pointer; text-decoration:underline; margin-top:16px; display:inline-block; }
   .faq-item{ background:var(--card); border:1px solid var(--line); border-radius:16px; margin-bottom:10px; overflow:hidden; }
+
+  /* STUDENT ACCOUNT */
+  .acc-profile-card{ background:linear-gradient(135deg, var(--green-light), #fff); border:1px solid var(--line); border-radius:20px; padding:22px 20px; margin-bottom:18px; display:flex; justify-content:space-between; align-items:center; gap:14px; flex-wrap:wrap; }
+  .acc-profile-name{ font-size:17px; font-weight:900; margin-bottom:4px; }
+  .acc-profile-meta{ font-size:12px; color:var(--ink-mute); }
+  .acc-profile-actions{ display:flex; gap:8px; }
+  .acc-profile-actions button{ background:#fff; border:1px solid var(--line); border-radius:10px; padding:8px 14px; font-size:12.5px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .acc-profile-actions button:hover{ border-color:var(--green); color:var(--green-deep); }
+  .acc-profile-actions button.danger:hover{ border-color:var(--red); color:var(--red); }
+  .acc-setup-card{ background:var(--card); border:1px solid var(--line); border-radius:20px; padding:24px 20px; margin-bottom:18px; }
+  .acc-setup-card input{ width:100%; background:var(--field); border:1.5px solid var(--line); border-radius:12px; padding:13px 15px; font-size:14px; font-family:inherit; margin:10px 0 14px; }
+  .acc-setup-card input:focus{ outline:none; border-color:var(--green); }
+  .acc-setup-card button{ background:var(--green); color:#fff; border:none; border-radius:12px; padding:12px 22px; font-size:14px; font-weight:700; cursor:pointer; font-family:inherit; }
+  .acc-setup-card button:hover{ background:var(--green-deep); }
+  .acc-stats-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-bottom:20px; }
+  .acc-item{ background:var(--card); border:1px solid var(--line); border-radius:14px; padding:12px 14px; margin-bottom:8px; display:flex; justify-content:space-between; align-items:center; gap:10px; cursor:pointer; transition:.15s; }
+  .acc-item:hover{ border-color:var(--green); }
+  .acc-item .main{ font-weight:700; font-size:13px; }
+  .acc-item .sub{ font-size:11.5px; color:var(--ink-mute); margin-top:2px; }
+  .acc-item .del-btn{ background:none; border:none; color:var(--ink-mute); font-size:16px; cursor:pointer; padding:4px 8px; flex-shrink:0; }
+  .acc-item .del-btn:hover{ color:var(--red); }
+  .acc-section-title{ font-size:14px; font-weight:800; margin:22px 0 10px; display:flex; justify-content:space-between; align-items:center; }
+  .acc-clear-all{ background:none; border:none; color:var(--red); font-size:11.5px; cursor:pointer; font-family:inherit; }
   .faq-q{ padding:16px 18px; font-weight:700; font-size:14.5px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; }
   .faq-q::after{content:"+"; font-size:18px; color:var(--green); transition:transform .2s ease;}
   .faq-item.open .faq-q::after{transform:rotate(45deg);}
@@ -425,6 +471,7 @@
       <button class="tab-btn" data-cat="smart"><span class="ico">🧠</span>الأدوات الذكية</button>
       <button class="tab-btn" data-cat="office"><span class="ico">🏢</span>خدمات مكتب المستقبل</button>
       <button class="tab-btn" data-cat="news"><span class="ico">📰</span>الأخبار</button>
+      <button class="tab-btn" data-cat="account"><span class="ico">🧑‍🎓</span>حسابي</button>
       <button class="tab-btn" data-cat="founder"><span class="ico">👤</span>عن المؤسس</button>
     </div>
   </div>
@@ -435,12 +482,12 @@
   <div class="cat-panel active" id="cat-home">
     <div class="about-box">
       <h3 style="margin-bottom:10px; font-size:16px;">نبذة عن المنصة</h3>
-      <p>"مستقبلي" منصة طلابية عراقية تجمع أدوات القبول الجامعي والاستشارة الذكية في مكان واحد، لتساعدك تعرف فرصك الحقيقية وتخطط لمستقبلك الدراسي بثقة، اعتمادًا على بيانات الحدود الدنيا الرسمية لسنة 2025/2026.</p>
+      <p>"مستقبلي" منصة طلابية عراقية تجمع أدوات القبول الجامعي والاستشارة الذكية في مكان واحد، لتساعدك على معرفة فرصك الحقيقية والتخطيط لمستقبلك الدراسي بثقة، اعتمادًا على بيانات الحدود الدنيا الرسمية لسنة 2025/2026.</p>
     </div>
 
     <div class="card-box">
       <div class="field">
-        <label>🔍 البحث الذكي — دوّر عن أي جامعة أو كلية أو قسم</label>
+        <label>🔍 البحث الذكي — ابحث عن أي جامعة أو كلية أو قسم</label>
         <div class="search-field"><input type="text" id="homeSearch" placeholder="مثال: طب، هندسة حاسوب، جامعة بغداد..."><span class="icon">🔍</span></div>
       </div>
     </div>
@@ -457,6 +504,7 @@
       <div class="service-card" data-goto="smart:advisor" style="animation-delay:.22s"><div class="sicon">🧭</div><div class="slabel">المستشار الذكي</div><div class="sdesc">أفضل 20 خيار مقترح لك</div></div>
       <div class="service-card" data-goto-cat="news" style="animation-delay:.26s"><div class="sicon">📰</div><div class="slabel">الأخبار التعليمية</div><div class="sdesc">آخر مستجدات التربية والتعليم</div></div>
       <div class="service-card" data-goto="office:eservices" style="animation-delay:.30s"><div class="sicon">💻</div><div class="slabel">الخدمات الإلكترونية</div><div class="sdesc">استمارات وخدمات المكتب</div></div>
+      <div class="service-card" data-goto-cat="account" style="animation-delay:.34s"><div class="sicon">👤</div><div class="slabel">حسابي</div><div class="sdesc">احفظ معدلك وتخصصاتك المفضلة</div></div>
     </div>
 
     <div class="results-head"><h2>لماذا مركز مستقبلي؟</h2></div>
@@ -483,9 +531,9 @@
   <div class="cat-panel" id="cat-ask">
     <div class="ask-box">
       <h2>💬 اسأل مستقبلي</h2>
-      <p>اسأل أي سؤال عن القبول الجامعي، التخصصات، الحدود الدنيا، المدرّسين، أو أي شي يخص دراستك — ونحاول نطلعلك أفضل إجابة من محتوى المنصة مباشرة.</p>
+      <p>اسأل أي سؤال عن القبول الجامعي، التخصصات، الحدود الدنيا، المدرّسين، أو أي شيء يخص دراستك — ونحاول أن نقدّم لك أفضل إجابة من محتوى المنصة مباشرة.</p>
       <div class="ask-input-row">
-        <input type="text" id="askInput" placeholder="مثال: معدلي 91 علمي شنو أقدر أدرس؟ / شنو شروط كلية الطب؟">
+        <input type="text" id="askInput" placeholder="مثال: معدلي 91 علمي، ماذا يمكنني أن أدرس؟ / ما شروط كلية الطب؟">
         <button id="askBtn">اسأل 🔍</button>
       </div>
       <div class="ask-chips" id="askChips"></div>
@@ -497,12 +545,12 @@
   <!-- CATEGORY: المراحل الدراسية -->
   <!-- ============================================================ -->
   <div class="cat-panel" id="cat-stages">
-    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ بياناته من ملفي <code>teachers.json</code> و<code>malazim.json</code>. اختر المرحلة ← الصف ← المادة، وشوف أسماء المدرسين، واضغط على أي اسم لعرض ملازمه وتحميلها مباشرة.</div>
+    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ بياناته من ملفي <code>teachers.json</code> و<code>malazim.json</code>. اختر المرحلة ← الصف ← المادة، وشاهد أسماء المدرّسين، واضغط على أي اسم لعرض ملازمه وتحميلها مباشرة.</div>
 
     <div id="stagesEmptyNote" style="display:none;" class="soon-card">
       <div class="badge">لا توجد بيانات بعد</div>
-      <h3>ما لكينا ملفات البيانات</h3>
-      <p>هذا طبيعي إذا لسا ما رفعتوا teachers.json و malazim.json، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا المدرسين والملازم عبر أداة admin.html، صدّروا الملفات، وارفعوها بجانب هذا الملف على استضافتكم.</p>
+      <h3>لا تتوفر لدينا ملفات البيانات</h3>
+      <p>هذا أمر طبيعي إذا لم تُرفَع بعد ملفات teachers.json وmalazim.json، أو إذا كنتم تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا المدرّسين والملازم عبر أداة admin.html، ثم صدّروا الملفات وارفعوها بجانب هذا الملف على استضافتكم.</p>
     </div>
 
     <div id="stagesNav">
@@ -679,7 +727,7 @@
       <button class="sub-btn" data-sub="calc-muf">حاسبة المفاضلة</button>
     </div>
     <div class="subpanel active" id="panel-advisor">
-      <div class="notice"><b>مستشارك الذكي:</b> أدخل معدلك ورغبتك، وراح نطلعلك أفضل 20 خيار مرتبة، مع تقدير فرصة قبولك في كل واحد.</div>
+      <div class="notice"><b>مستشارك الذكي:</b> أدخل معدلك ورغبتك، وسنقدّم لك أفضل 20 خيارًا مرتّبة، مع تقدير فرصة قبولك في كل واحد منها.</div>
       <div class="card-box">
         <div class="field"><label>معدلك</label><input type="number" id="advAvg" min="50" max="100" step="0.01" placeholder="85.41"></div>
         <div class="field"><label>الفرع</label>
@@ -695,7 +743,7 @@
           </div>
         </div>
         <div class="field"><label>رغبتك (اختياري)</label><input type="text" id="advWish" placeholder="مثال: هندسة، طب، حاسوب"></div>
-        <div class="field"><button class="btn" id="advBtn">أعطني أفضل 20 خيار</button></div>
+        <div class="field"><button class="btn" id="advBtn">اعرض لي أفضل 20 خيارًا</button></div>
       </div>
       <div id="advResults"></div>
     </div>
@@ -775,10 +823,17 @@
     <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ الأخبار تلقائيًا من ملف <code>news.json</code> إلى جانب هذا الموقع. أضف الأخبار مباشرة داخل الملف بنفس التنسيق ليظهر تلقائيًا هنا.</div>
     <div id="newsEmptyNote" style="display:none;" class="soon-card">
       <div class="badge">لا توجد أخبار بعد</div>
-      <h3>ما لكينا ملف news.json</h3>
-      <p>هذا طبيعي إذا لسا ما رفعتوا الملف، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا الأخبار داخل news.json وارفعوه بجانب هذا الملف على استضافتكم.</p>
+      <h3>لا يتوفر لدينا ملف news.json</h3>
+      <p>هذا أمر طبيعي إذا لم يُرفَع الملف بعد، أو إذا كنتم تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا الأخبار داخل news.json وارفعوه بجانب هذا الملف على استضافتكم.</p>
     </div>
     <div id="newsGrid" class="uni-grid"></div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY: حسابي (حساب الطالب — محلي عبر المتصفح) -->
+  <!-- ============================================================ -->
+  <div class="cat-panel" id="cat-account">
+    <div id="accountArea"></div>
   </div>
 
   <!-- ============================================================ -->
@@ -904,7 +959,7 @@ homeSearch.addEventListener('input', ()=>{
   homeSearchResults.innerHTML = matches.map(r=>`
     <div class="home-search-item" data-name="${r.name}">
       <span>${formatName(r.name)} <span style="color:var(--ink-mute); font-size:12px;">(${r.avg.toFixed(2)}٪)</span></span>
-      <span class="go">افتح في الحدود الدنيا ↚</span>
+      <span class="go">افتح في الحدود الدنيا ←</span>
     </div>`).join('');
   homeSearchResults.querySelectorAll('.home-search-item').forEach(el=>{
     el.addEventListener('click', ()=>{
@@ -980,6 +1035,137 @@ function formatName(name){
   return name;
 }
 
+/* ---------- STUDENT ACCOUNT (حسابي) ----------
+   Local-only account stored in this browser via localStorage — no server, no real
+   login yet, per the current no-database project constraint. Everything funnels
+   through this single object, so upgrading later to a real backend/auth means
+   swapping the internals of these methods only — nothing else in the site needs
+   to change. */
+const ACCOUNT_KEY = 'mustaqbali_student_v1';
+window.MustaqbaliAccount = {
+  get(){ try{ return JSON.parse(localStorage.getItem(ACCOUNT_KEY)); }catch(e){ return null; } },
+  save(data){ try{ localStorage.setItem(ACCOUNT_KEY, JSON.stringify(data)); }catch(e){} },
+  create({name, branch, governorate}){
+    const data = { name, branch: branch||'', governorate: governorate||'', avg:null, favorites:[], history:[], createdAt:new Date().toISOString() };
+    this.save(data);
+    return data;
+  },
+  setAvg(avg){ const d=this.get(); if(!d) return; d.avg=avg; this.save(d); },
+  isFavorite(name){ const d=this.get(); return !!(d && (d.favorites||[]).some(f=>f.name===name)); },
+  saveMajor(item){
+    const d=this.get();
+    if(!d){ alert('أنشئ حسابك المحلي أولًا من تبويب "حسابي" حتى تتمكّن من حفظ مفضّلتك.'); return null; }
+    d.favorites = d.favorites || [];
+    const idx = d.favorites.findIndex(f=>f.name===item.name);
+    let nowFav;
+    if(idx>=0){ d.favorites.splice(idx,1); nowFav=false; }
+    else { d.favorites.unshift({name:item.name, avg:item.avg, branch:item.branch, total:item.total, addedAt:new Date().toISOString()}); d.favorites=d.favorites.slice(0,60); nowFav=true; }
+    this.save(d);
+    return nowFav;
+  },
+  removeFavorite(name){ const d=this.get(); if(!d) return; d.favorites=(d.favorites||[]).filter(f=>f.name!==name); this.save(d); },
+  logSearch(entry){
+    const d=this.get(); if(!d) return;
+    d.history = d.history || [];
+    d.history.unshift(Object.assign({}, entry, {at:new Date().toISOString()}));
+    d.history = d.history.slice(0,15);
+    this.save(d);
+  },
+  removeHistoryItem(idx){ const d=this.get(); if(!d) return; d.history.splice(idx,1); this.save(d); },
+  clear(){ localStorage.removeItem(ACCOUNT_KEY); }
+};
+
+function renderAccountPanel(){
+  const area = document.getElementById('accountArea');
+  if(!area) return;
+  const d = window.MustaqbaliAccount.get();
+  if(!d){
+    area.innerHTML = `
+      <div class="acc-profile-card">
+        <div class="name">أنشئ حسابك المحلي</div>
+        <div class="meta" style="margin-bottom:16px; line-height:1.9;">يُحفظ هذا الحساب داخل متصفحك على هذا الجهاز فقط (بدون خادم أو تسجيل دخول حقيقي حاليًا)، ويخزّن اسمك ومعدلك وتخصصاتك المفضّلة وسجل بحثك — قابل للترقية لاحقًا لحساب حقيقي متزامن بين الأجهزة.</div>
+        <div class="acc-form">
+          <input type="text" id="accName" placeholder="اسمك">
+          <select id="accBranch">
+            <option value="">— فرعك (اختياري) —</option>
+            <option value="علمي">علمي</option>
+            <option value="أدبي">أدبي</option>
+            <option value="فنون">فنون</option>
+          </select>
+          <input type="text" id="accGov" placeholder="محافظتك (اختياري)">
+        </div>
+        <button class="btn" id="accCreateBtn">➕ إنشاء الحساب</button>
+      </div>`;
+    document.getElementById('accCreateBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('accName').value.trim();
+      if(!name){ alert('الرجاء إدخال اسمك'); return; }
+      window.MustaqbaliAccount.create({ name, branch:document.getElementById('accBranch').value, governorate:document.getElementById('accGov').value.trim() });
+      renderAccountPanel();
+    });
+    return;
+  }
+
+  const favs = d.favorites || [];
+  const hist = d.history || [];
+  area.innerHTML = `
+    <div class="acc-profile-card">
+      <div class="name">👋 أهلاً ${d.name}</div>
+      <div class="meta">${[d.branch, d.governorate].filter(Boolean).join(' · ') || 'لا توجد بيانات إضافية'}</div>
+      ${d.avg ? `<div class="acc-avg-badge">📊 معدلك المحفوظ: ${d.avg}</div>` : ''}
+      <div class="acc-form" style="margin-top:16px;">
+        <input type="number" id="accAvgInput" min="50" max="100" step="0.01" placeholder="احفظ معدلك هنا" value="${d.avg||''}">
+      </div>
+      <button class="btn secondary" id="accSaveAvgBtn">💾 حفظ المعدل</button>
+      ${d.avg ? `<button class="btn ghost" id="accUseAvgBtn" style="margin-right:8px;">📊 استخدمه بحاسبة القبول</button>` : ''}
+      <div><span class="acc-logout-link" id="accLogoutBtn">🗑️ حذف الحساب المحلي وكل بياناته</span></div>
+    </div>
+
+    <div class="acc-section-title">⭐ تخصصاتي المفضّلة (${favs.length})</div>
+    ${favs.length===0 ? `<div class="empty-state" style="padding:24px;"><div class="display" style="font-size:13px;">لا توجد لديك تخصصات مفضّلة بعد — أضفها بالنجمة ⭐ من نتائج حاسبة القبول</div></div>` :
+      favs.map(f=>`<div class="acc-fav-item" data-name="${f.name}">
+        <div><div class="main">${formatName(f.name)}</div><div class="sub">الفرع: ${f.branch} · الحد الأدنى: ${(+f.avg).toFixed(2)}٪</div></div>
+        <button class="acc-remove-btn" data-name="${f.name}" title="إزالة">✕</button>
+      </div>`).join('')}
+
+    <div class="acc-section-title">🕘 آخر عمليات البحث (${hist.length})</div>
+    ${hist.length===0 ? `<div class="empty-state" style="padding:24px;"><div class="display" style="font-size:13px;">لا يوجد سجل بحث بعد</div></div>` :
+      hist.map((h,i)=>`<div class="acc-hist-item" data-idx="${i}">
+        <div><div class="main">${h.label}</div><div class="sub">${new Date(h.at).toLocaleDateString('ar-IQ')}</div></div>
+        <button class="acc-remove-btn" data-idx="${i}" title="إزالة">✕</button>
+      </div>`).join('')}
+  `;
+
+  document.getElementById('accSaveAvgBtn').addEventListener('click', ()=>{
+    const v = parseFloat(document.getElementById('accAvgInput').value);
+    if(isNaN(v)){ alert('أدخل معدلًا صحيحًا'); return; }
+    window.MustaqbaliAccount.setAvg(v);
+    renderAccountPanel();
+  });
+  const useAvgBtn = document.getElementById('accUseAvgBtn');
+  if(useAvgBtn){
+    useAvgBtn.addEventListener('click', ()=>{
+      avgInput.value = d.avg;
+      goToCat('admission','checker');
+      render();
+    });
+  }
+  document.getElementById('accLogoutBtn').addEventListener('click', ()=>{
+    if(confirm('هل تريد حذف حسابك المحلي وكل بياناته المحفوظة (المفضلة والسجل)؟ هذا الإجراء لا يمكن التراجع عنه.')){
+      window.MustaqbaliAccount.clear();
+      renderAccountPanel();
+    }
+  });
+  area.querySelectorAll('.acc-fav-item .acc-remove-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{ window.MustaqbaliAccount.removeFavorite(b.dataset.name); renderAccountPanel(); });
+  });
+  area.querySelectorAll('.acc-hist-item .acc-remove-btn').forEach(b=>{
+    b.addEventListener('click', ()=>{ window.MustaqbaliAccount.removeHistoryItem(parseInt(b.dataset.idx)); renderAccountPanel(); });
+  });
+}
+document.querySelector('#tabs > .tab-btn[data-cat="account"]').addEventListener('click', renderAccountPanel);
+const accountServiceCard = document.querySelector('.service-card[data-goto-cat="account"]');
+if(accountServiceCard) accountServiceCard.addEventListener('click', renderAccountPanel);
+
 /* ---------- CHECKER ---------- */
 const avgInput=document.getElementById('avgInput'), genderInput=document.getElementById('genderInput'),
 sortInput=document.getElementById('sortInput'), keywordInput=document.getElementById('keywordInput'),
@@ -1022,13 +1208,28 @@ function render(){
     const gap=avg-r.avg, tight=gap<1.5;
     return `<div class="card ${idx===0?'top':''}" style="animation-delay:${Math.min(idx*0.03,0.6)}s">
       ${idx===0?'<span class="top-tag">الأنسب</span>':''}
+      <button class="card-save-btn ${window.MustaqbaliAccount.isFavorite(r.name)?'saved':''}" data-idx="${idx}" title="حفظ في تخصصاتي المفضلة">⭐</button>
       <div class="card-main"><div class="card-name">${formatName(r.name)}</div>
       <div class="card-meta"><span class="pill">${r.branch}</span><span class="pill">${r.gender}</span><span class="pill">مجموع: ${r.total}</span><span class="pill">عدد المقبولين: ${r.rank}</span></div></div>
       <div class="card-stats"><div class="req">${r.avg.toFixed(2)}٪</div><div class="gap ${tight?'close':''}">${tight?'فارق ضيق — ':'فارق '}${gap.toFixed(2)} نقطة</div></div>
     </div>`;
   }).join('');
+  resultsEl.querySelectorAll('.card-save-btn').forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      e.stopPropagation();
+      const r = matches[parseInt(btn.dataset.idx)];
+      const nowFav = window.MustaqbaliAccount.saveMajor(r);
+      if(nowFav!==null) btn.classList.toggle('saved', nowFav);
+    });
+  });
 }
-checkBtn.addEventListener('click', render);
+checkBtn.addEventListener('click', ()=>{
+  render();
+  const avg=parseFloat(avgInput.value);
+  if(!isNaN(avg)){
+    window.MustaqbaliAccount.logSearch({label:`بحث بمعدل ${avg} (${currentBranch}) — ${document.getElementById('resultsCount').textContent||''}`, type:'checker'});
+  }
+});
 avgInput.addEventListener('keydown', e=>{if(e.key==='Enter') render();});
 keywordInput.addEventListener('input', ()=>{if(avgInput.value) render();});
 genderInput.addEventListener('change', ()=>{if(avgInput.value) render();});
@@ -1382,12 +1583,12 @@ document.querySelectorAll('.faq-q').forEach(el=>{ el.addEventListener('click', (
   const askAnswerArea = document.getElementById('askAnswerArea');
 
   const SUGGESTED_QUESTIONS = [
-    'معدلي 88 علمي شنو أقدر أدرس؟',
-    'شنو شروط كلية الطب؟',
+    'معدلي 88 علمي، ماذا يمكنني أن أدرس؟',
+    'ما شروط كلية الطب؟',
     'الحدود الدنيا لجامعة بغداد',
     'كيف أقدّم للقبول المركزي؟',
-    'مدرّسين الرياضيات للسادس العلمي',
-    'شنو الفرق بين الصباحي والمسائي؟'
+    'مدرّسو الرياضيات للسادس العلمي',
+    'ما الفرق بين الصباحي والمسائي؟'
   ];
   askChips.innerHTML = SUGGESTED_QUESTIONS.map(q=>`<div class="ask-chip">${q}</div>`).join('');
   askChips.querySelectorAll('.ask-chip').forEach(chip=>{
@@ -1449,7 +1650,7 @@ document.querySelectorAll('.faq-q').forEach(el=>{ el.addEventListener('click', (
       block.className = 'ask-answer-block';
       block.innerHTML = `<div class="ask-answer-head">📊 بناءً على معدل ${avg} (فرع ${branch}${keyword? ' — بحث: '+keyword:''})</div>`;
       if(top.length===0){
-        block.innerHTML += `<div class="ask-empty">ما لكينا تخصصات مطابقة بهذا المعدل والفرع${keyword?' وكلمة البحث "'+keyword+'"':''}. جرّب تفتح <b>حاسبة القبول</b> مباشرة لتوسيع البحث.</div>`;
+        block.innerHTML += `<div class="ask-empty">لا توجد لدينا تخصصات مطابقة بهذا المعدل والفرع${keyword?' وكلمة البحث "'+keyword+'"':''}. جرّب أن تفتح <b>حاسبة القبول</b> مباشرة لتوسيع نطاق البحث.</div>`;
       } else {
         top.forEach(r=>{
           const card = goldenCard(formatName(r.name), `الفرع: ${r.branch} · الحد الأدنى: ${r.avg.toFixed(2)}٪ · المجموع: ${r.total}`, 'افتح بحاسبة القبول', ()=>{
@@ -1459,11 +1660,25 @@ document.querySelectorAll('.faq-q').forEach(el=>{ el.addEventListener('click', (
             goToCat('admission','checker');
             render();
           });
+          const star = document.createElement('button');
+          star.className = 'card-save-btn ' + (window.MustaqbaliAccount.isFavorite(r.name)?'saved':'');
+          star.style.position = 'static';
+          star.title = 'حفظ في تخصصاتي المفضلة';
+          star.textContent = '⭐';
+          star.addEventListener('click', (e)=>{
+            e.stopPropagation();
+            const nowFav = window.MustaqbaliAccount.saveMajor(r);
+            if(nowFav!==null) star.classList.toggle('saved', nowFav);
+          });
+          card.insertBefore(star, card.firstChild);
           block.appendChild(card);
         });
       }
       askAnswerArea.appendChild(block);
       handledAvg = true;
+      window.MustaqbaliAccount.logSearch({label:`سؤال: "${raw}"`, type:'ask'});
+    } else {
+      window.MustaqbaliAccount.logSearch({label:`سؤال: "${raw}"`, type:'ask'});
     }
 
     /* 2) FAQ match */
@@ -1530,7 +1745,7 @@ document.querySelectorAll('.faq-q').forEach(el=>{ el.addEventListener('click', (
     }
 
     if(!askAnswerArea.innerHTML.trim()){
-      askAnswerArea.innerHTML = `<div class="ask-empty">ما لكينا إجابة مباشرة لهذا السؤال. جرّب تصيغ سؤالك بطريقة أوضح (مثلاً بذكر معدلك أو اسم الكلية/الجامعة)، أو تواصل معنا مباشرة عبر <a href="https://wa.me/9647718828710" target="_blank" style="color:var(--green-deep); font-weight:700;">واتساب</a>.</div>`;
+      askAnswerArea.innerHTML = `<div class="ask-empty">لا توجد لدينا إجابة مباشرة لهذا السؤال. جرّب أن تصيغ سؤالك بطريقة أوضح (مثلاً بذكر معدلك أو اسم الكلية/الجامعة)، أو تواصل معنا مباشرة عبر <a href="https://wa.me/9647718828710" target="_blank" style="color:var(--green-deep); font-weight:700;">واتساب</a>.</div>`;
     }
   }
   function recomposeStageAsk(stage, branch){
