@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-<head><!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-GY4HCC2RRB"></script>
-<script>
-window.dataLayer = window.dataLayer || [];
-function gtag(){dataLayer.push(arguments);}
-gtag('js', new Date());
-gtag('config', 'G-GY4HCC2RRB');
-</script>
+<head>
 <meta charset="UTF-8">
 <meta name="color-scheme" content="light only">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +8,7 @@ gtag('config', 'G-GY4HCC2RRB');
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' rx='6' fill='%2316A34A'/%3E%3Cpath d='M12 5L3 9.5l9 4.5 7.5-3.75V16h1.5V9.5L12 5z' fill='%23fff'/%3E%3Cpath d='M6.5 11.8v3.4C6.5 17.1 9 18.3 12 18.3s5.5-1.2 5.5-3.1v-3.4L12 14.4l-5.5-2.6z' fill='%23fff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
   :root{
     --bg:#F6F7F9; --card:#FFFFFF; --ink:#181C22; --ink-soft:#6B7280; --ink-mute:#9CA3AF;
@@ -1344,9 +1338,8 @@ function refreshHomeStats(){
   document.getElementById('statMalazimCount').textContent = MALAZIM.length;
   const subjectsSet = new Set(TEACHERS.map(t=>t.subject).filter(Boolean));
   document.getElementById('statSubjectsCount').textContent = subjectsSet.size;
-  // Visitor count intentionally left as "—" (no fake counter). Wire this to a real
-  // analytics service later (e.g. Plausible/GoatCounter/Google Analytics) and update
-  // #statVisitors with the real number once that integration exists.
+  // Visitor count is populated separately by the Supabase-backed
+  // counter at the bottom of this script (see #statVisitors there).
 }
 
 function renderGrades(){
@@ -1566,6 +1559,29 @@ const FAQS=[
 document.getElementById('faqList').innerHTML = FAQS.map((f,i)=>`
   <div class="faq-item" id="faq-${i}"><div class="faq-q">${f.q}</div><div class="faq-a">${f.a}</div></div>`).join('');
 document.querySelectorAll('.faq-q').forEach(el=>{ el.addEventListener('click', ()=>{ el.parentElement.classList.toggle('open'); }); });
+
+/* ---------- VISITOR COUNTER (Supabase) ---------- */
+const SUPABASE_URL = 'https://sydzyolrtfuqpypctqjv.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_eJhbKITETErLFs-d3gEIOg_6VXWHf_6';
+
+if (!window.supabase) {
+  console.error('Supabase JS library failed to load — check the <script> tag in <head>.');
+  const el = document.getElementById('statVisitors');
+  if (el) el.textContent = '0';
+} else {
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  client.rpc('increment_visitors')
+    .then(({ data, error }) => {
+      const el = document.getElementById('statVisitors');
+      if (error) { console.error('Supabase increment_visitors error:', error); if (el) el.textContent = '0'; return; }
+      if (el) el.textContent = data;
+    })
+    .catch(err => {
+      console.error('Supabase visitor counter fetch failed:', err);
+      const el = document.getElementById('statVisitors');
+      if (el) el.textContent = '0';
+    });
+}
 </script>
 </body>
 </html>
