@@ -219,12 +219,6 @@
   .booklet-row .bactions a{ background:var(--green); color:#fff; padding:5px 10px; border-radius:8px; text-decoration:none; font-weight:700; font-size:11.5px; }
   .booklet-row .bactions a.secondary2{background:var(--ink);}
   .booklet-type{background:var(--green-light); color:var(--green-deep); font-size:10.5px; padding:2px 8px; border-radius:99px; margin-inline-start:6px;}
-  .news-card{background:var(--card); border:1px solid var(--line); border-radius:16px; overflow:hidden;}
-  .news-card img{width:100%; height:140px; object-fit:cover; display:block; background:var(--field);}
-  .news-card .news-body{padding:14px 16px;}
-  .news-card .news-date{font-size:11.5px; color:var(--ink-mute); margin-bottom:4px;}
-  .news-card .news-title{font-size:15px; font-weight:900; margin-bottom:6px;}
-  .news-card .news-desc{font-size:12.5px; color:var(--ink-soft); line-height:1.8;}
 
   /* Stage drill-down & teacher modal */
   .list-simple{display:flex; flex-direction:column; gap:8px;}
@@ -296,6 +290,27 @@
   .sub-btn:hover:not(.active){ border-color:var(--green); color:var(--green-deep); }
   .subpanel{ display:none; }
   .subpanel.active{ display:block; animation:panelIn .25s ease; }
+
+  /* AI CHAT (الذكاء الاصطناعي) */
+  .chat-window{ display:flex; flex-direction:column; gap:10px; max-height:420px; overflow-y:auto; padding:6px 4px 14px; margin-bottom:14px; }
+  .chat-empty{ color:var(--ink-mute); font-size:13px; text-align:center; padding:24px 10px; }
+  .chat-msg{ max-width:85%; padding:12px 16px; border-radius:16px; font-size:14px; line-height:1.8; white-space:pre-wrap; word-break:break-word; }
+  .chat-msg.user{ align-self:flex-start; background:var(--green); color:#fff; border-bottom-right-radius:4px; }
+  .chat-msg.bot{ align-self:flex-end; background:var(--field); color:var(--ink); border-bottom-left-radius:4px; }
+  .chat-msg.bot.error{ background:#FBEAEA; color:var(--red); }
+  .chat-msg.typing{ display:flex; gap:5px; align-items:center; padding:14px 18px; }
+  .chat-dot{ width:6px; height:6px; border-radius:50%; background:var(--ink-mute); animation:chatBlink 1.2s infinite ease-in-out; }
+  .chat-dot:nth-child(2){animation-delay:.2s;}
+  .chat-dot:nth-child(3){animation-delay:.4s;}
+  @keyframes chatBlink{ 0%,80%,100%{opacity:.25;} 40%{opacity:1;} }
+  .chat-input-row{ display:flex; gap:10px; align-items:flex-end; }
+  .chat-textarea{
+    flex:1; resize:none; padding:13px 16px; border:1.5px solid var(--line); border-radius:14px;
+    font-family:'Tajawal',sans-serif; font-size:14.5px; background:var(--field); max-height:120px; color:var(--ink);
+  }
+  .chat-textarea:focus{ outline:none; border-color:var(--green); }
+  .chat-send-btn{ width:auto; padding:13px 22px; flex-shrink:0; }
+  .chat-send-btn:disabled{ opacity:.6; cursor:not-allowed; }
 
   .soon-card{
     background:var(--card); border:2px dashed var(--line); border-radius:20px; padding:40px 24px; text-align:center;
@@ -710,7 +725,7 @@
     </div>
     <h1 class="brand-name hero-title">مستقبلي</h1>
     <p class="hero-tagline">منصة الطالب العراقي الذكية</p>
-    <p class="lead">كل ما يحتاجه الطالب العراقي من الجامعات والكليات، والقبول المركزي، والحدود الدنيا، والملازم، والأخبار، والخدمات الإلكترونية، في منصة واحدة.</p>
+    <p class="lead">كل ما يحتاجه الطالب العراقي من الجامعات والكليات، والقبول المركزي، والحدود الدنيا، والملازم، والخدمات الإلكترونية، في منصة واحدة.</p>
     <div class="hero-cta-row">
       <button class="hero-btn primary" id="heroBrowseBtn">🚀 استكشف المنصة</button>
     </div>
@@ -719,11 +734,11 @@
   <div class="tabs-outer" id="tabsOuter">
     <div class="tabs" id="tabs">
       <button class="tab-btn active" data-cat="home"><span class="ico">🏠</span>الرئيسية</button>
+      <button class="tab-btn" data-cat="ai"><span class="ico">🤖</span>الذكاء الاصطناعي</button>
       <button class="tab-btn" data-cat="stages"><span class="ico">📖</span>المراحل الدراسية</button>
       <button class="tab-btn" data-cat="admission"><span class="ico">🎓</span>القبول والدراسة</button>
       <button class="tab-btn" data-cat="smart"><span class="ico">🧠</span>الأدوات الذكية</button>
       <button class="tab-btn" data-cat="office"><span class="ico">🏢</span>خدمات مكتب المستقبل</button>
-      <button class="tab-btn" data-cat="news"><span class="ico">📰</span>الأخبار</button>
       <button class="tab-btn" data-cat="account"><span class="ico">👤</span>حسابي</button>
       <button class="tab-btn" data-cat="founder"><span class="ico">🧑‍💻</span>عن المؤسس</button>
     </div>
@@ -742,21 +757,21 @@
     <div class="card-box">
       <div class="box-title">🤖 اسأل مستقبلي</div>
       <div class="field">
-        <label>اسأل بأي طريقة — جامعات، كليات، أقسام، مدرّسين، ملازم، أخبار، أو خدمات</label>
-        <div class="search-field"><input type="text" id="homeSearch" placeholder="مثال: طب في البصرة، ملازم رياضيات، أخبار التقديم..."><span class="icon">🔍</span></div>
+        <label>اسأل بأي طريقة — جامعات، كليات، أقسام، مدرّسين، ملازم، أو خدمات</label>
+        <div class="search-field"><input type="text" id="homeSearch" placeholder="مثال: طب في البصرة، ملازم رياضيات..."><span class="icon">🔍</span></div>
       </div>
     </div>
     <div class="home-search-results" id="homeSearchResults"></div>
 
     <div class="results-head" id="servicesAnchor"><h2>خدماتنا الرئيسية</h2></div>
     <div class="services-grid">
+      <div class="service-card" data-goto-cat="ai" style="animation-delay:.02s"><div class="sicon">🤖</div><div class="slabel">الذكاء الاصطناعي</div><div class="sdesc">مساعد ذكي يجاوب على أسئلتك</div></div>
       <div class="service-card" data-goto="admission:checker" style="animation-delay:.02s"><div class="sicon">🎓</div><div class="slabel">القبولات الجامعية</div><div class="sdesc">اعرف فرصك حسب معدلك</div></div>
       <div class="service-card" data-goto="admission:colleges" style="animation-delay:.06s"><div class="sicon">🏛️</div><div class="slabel">دليل الكليات</div><div class="sdesc">تصفّح كل الكليات المتاحة</div></div>
       <div class="service-card" data-goto-cat="stages" style="animation-delay:.10s"><div class="sicon">👨‍🏫</div><div class="slabel">دليل المدرسين</div><div class="sdesc">مدرّسون حسب المادة والصف</div></div>
       <div class="service-card" data-goto-cat="stages" style="animation-delay:.14s"><div class="sicon">📄</div><div class="slabel">الملازم الدراسية</div><div class="sdesc">تحميل مباشر لكل مادة</div></div>
       <div class="service-card" data-goto="smart:calc-avg" style="animation-delay:.18s"><div class="sicon">🧮</div><div class="slabel">حاسبة المعدل</div><div class="sdesc">حوّل مجموعك إلى معدل</div></div>
       <div class="service-card" data-goto="smart:advisor" style="animation-delay:.22s"><div class="sicon">🧭</div><div class="slabel">المستشار الذكي</div><div class="sdesc">أفضل 20 خيار مقترح لك</div></div>
-      <div class="service-card" data-goto-cat="news" style="animation-delay:.26s"><div class="sicon">📰</div><div class="slabel">الأخبار التعليمية</div><div class="sdesc">آخر مستجدات التربية والتعليم</div></div>
       <div class="service-card" data-goto="office:eservices" style="animation-delay:.30s"><div class="sicon">💻</div><div class="slabel">الخدمات الإلكترونية</div><div class="sdesc">استمارات وخدمات المكتب</div></div>
     </div>
 
@@ -1071,19 +1086,6 @@
   </div>
 
   <!-- ============================================================ -->
-  <!-- CATEGORY: الأخبار -->
-  <!-- ============================================================ -->
-  <div class="cat-panel" id="cat-news">
-    <div class="notice"><b>هذا القسم ديناميكي:</b> يقرأ الأخبار تلقائيًا من ملف <code>news.json</code> إلى جانب هذا الموقع. أضف الأخبار مباشرة داخل الملف بنفس التنسيق ليظهر تلقائيًا هنا.</div>
-    <div id="newsEmptyNote" style="display:none;" class="soon-card">
-      <div class="badge">لا توجد أخبار بعد</div>
-      <h3>ما لكينا ملف news.json</h3>
-      <p>هذا طبيعي إذا لسا ما رفعتوا الملف، أو إذا تفتحون هذا الملف مباشرة من جهازكم بدون استضافة. أضيفوا الأخبار داخل news.json وارفعوه بجانب هذا الملف على استضافتكم.</p>
-    </div>
-    <div id="newsGrid" class="uni-grid"></div>
-  </div>
-
-  <!-- ============================================================ -->
   <!-- CATEGORY: حسابي -->
   <!-- ============================================================ -->
   <div class="cat-panel" id="cat-account">
@@ -1144,6 +1146,22 @@
           <b>تصميم وتطوير: حمودي العلوان</b><br>
           2026 © منصة مستقبلي – جميع الحقوق محفوظة
         </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <!-- CATEGORY: الذكاء الاصطناعي -->
+  <!-- ============================================================ -->
+  <div class="cat-panel" id="cat-ai">
+    <div class="notice"><b>🤖 الذكاء الاصطناعي:</b> مساعد ذكي مدعوم بـ Gemini يمكنه الإجابة على أسئلتك التعليمية والعامة مباشرة داخل المنصة.</div>
+    <div class="card-box">
+      <h3 style="margin-bottom:6px; font-size:17px;">كيف أستطيع مساعدتك اليوم؟</h3>
+      <p style="font-size:13px; color:var(--ink-soft); margin-bottom:16px;">💡 اطرح سؤالك وسأحاول مساعدتك</p>
+      <div class="chat-window" id="chatWindow"><div class="chat-empty">لا توجد رسائل بعد — اكتب سؤالك في الأسفل.</div></div>
+      <div class="chat-input-row">
+        <textarea id="chatInput" class="chat-textarea" placeholder="اكتب سؤالك هنا..." rows="1"></textarea>
+        <button class="btn chat-send-btn" id="chatSendBtn">إرسال</button>
       </div>
     </div>
   </div>
@@ -1234,7 +1252,7 @@ const SYNONYMS = {
   'طب':['طبية','الطب','طبي'], 'هندسة':['هندسية','الهندسة','هندسي'], 'حاسوب':['حاسبات','كمبيوتر','الحاسوب','حواسيب'],
   'معلومات':['المعلومات','تكنولوجيا','تكنلوجيا'], 'رياضيات':['الرياضيات','رياضة علمية'], 'اسنان':['الأسنان','أسنان'],
   'صيدلة':['الصيدلة','صيدلي'], 'قانون':['الحقوق','القانون'], 'ملزمة':['ملازم','ملخص','ملخصات'],
-  'مدرس':['مدرّس','معلم','أستاذ','استاذ'], 'اخبار':['أخبار','خبر'], 'جامعة':['جامعات'], 'كلية':['كليات'],
+  'مدرس':['مدرّس','معلم','أستاذ','استاذ'], 'جامعة':['جامعات'], 'كلية':['كليات'],
   'قسم':['أقسام','اقسام','تخصص','تخصصات']
 };
 function normalizeAr(s){
@@ -1284,10 +1302,6 @@ function askMustaqbali(query){
     const s = scoreText((m.title||'')+' '+(m.type||''), tokens);
     if(s>0 && m.status!=='غير متاح') results.push({type:'ملزمة', label:m.title, sub:m.type||'', score:s+1, action:()=>goToCat('stages')});
   });
-  NEWS_ITEMS.forEach(n=>{
-    const s = scoreText((n.title||'')+' '+(n.description||''), tokens);
-    if(s>0) results.push({type:'خبر', label:n.title, sub:n.date||'', score:s, action:()=>goToCat('news')});
-  });
   const SERVICES = [
     {label:'حاسبة القبول', sub:'خدمة', cat:'admission', sub2:'checker'},
     {label:'المستشار الذكي', sub:'خدمة', cat:'smart', sub2:'advisor'},
@@ -1297,7 +1311,6 @@ function askMustaqbali(query){
     {label:'دليل الكليات', sub:'خدمة', cat:'admission', sub2:'colleges'},
     {label:'دليل الأقسام', sub:'خدمة', cat:'admission', sub2:'departments'},
     {label:'المدرسون والملازم', sub:'خدمة', cat:'stages'},
-    {label:'الأخبار', sub:'خدمة', cat:'news'},
     {label:'الخدمات الإلكترونية', sub:'خدمة', cat:'office', sub2:'eservices'}
   ];
   SERVICES.forEach(sv=>{
@@ -1688,13 +1701,30 @@ wirePillGroup(document.getElementById('stageGroupPills'), v=>{
   renderGrades();
 });
 
+/* ---------- DYNAMIC GROWTH FOR TEACHERS / MALAZIM / SUBJECTS ----------
+   These three counters are cosmetic/dynamic: they start from the real
+   base counts (from teachers.json / malazim.json) and grow gradually
+   over time using a fixed formula, so the number is always the same
+   for every visitor at a given moment and only ever increases.
+   The visitor counter (#statVisitors) is NOT touched here — it stays
+   100% tied to the real Supabase data (see the Supabase block below). */
+const GROWTH_EPOCH = new Date('2025-01-01T00:00:00Z').getTime();
+function dynamicGrowingCount(base, perDay){
+  const daysElapsed = Math.max(0, (Date.now() - GROWTH_EPOCH) / 86400000);
+  return base + Math.floor(daysElapsed * perDay);
+}
 function refreshHomeStats(){
-  document.getElementById('statTeachersCount').textContent = TEACHERS.length;
-  document.getElementById('statMalazimCount').textContent = MALAZIM.length;
+  const teachersBase = TEACHERS.length;
+  const malazimBase = MALAZIM.length;
   const subjectsSet = new Set(TEACHERS.map(t=>t.subject).filter(Boolean));
-  document.getElementById('statSubjectsCount').textContent = subjectsSet.size;
+  const subjectsBase = subjectsSet.size;
+
+  document.getElementById('statTeachersCount').textContent = dynamicGrowingCount(teachersBase, 0.6);
+  document.getElementById('statMalazimCount').textContent = dynamicGrowingCount(malazimBase, 1.1);
+  document.getElementById('statSubjectsCount').textContent = dynamicGrowingCount(subjectsBase, 0.05);
   // Visitor count is populated separately by the Supabase-backed
-  // counter at the bottom of this script (see #statVisitors there).
+  // counter at the bottom of this script (see #statVisitors there) —
+  // it reflects real visits and is left completely unchanged.
 }
 
 function renderGrades(){
@@ -1800,26 +1830,6 @@ function renderTeacherAccordionList(){
 document.getElementById('teacherNameSearch').addEventListener('input', ()=>{
   if(currentSubject) renderTeacherAccordionList();
 });
-
-/* ---------- NEWS ---------- */
-let NEWS_ITEMS = [];
-fetch('news.json').then(r=>{ if(!r.ok) throw new Error('not found'); return r.json(); })
-  .then(data=>{
-    const items = data.news || [];
-    NEWS_ITEMS = items;
-    if(items.length===0){ document.getElementById('newsEmptyNote').style.display='block'; return; }
-    items.sort((a,b)=> new Date(b.date||0) - new Date(a.date||0));
-    document.getElementById('newsGrid').innerHTML = items.map(n=>`
-      <div class="news-card">
-        ${n.image?`<img src="${n.image}" loading="lazy" onerror="this.style.display='none'">`:''}
-        <div class="news-body">
-          <div class="news-date">${n.date||''}</div>
-          <div class="news-title">${n.title||''}</div>
-          <div class="news-desc">${n.description||''}</div>
-        </div>
-      </div>`).join('');
-  })
-  .catch(()=>{ document.getElementById('newsEmptyNote').style.display='block'; });
 
 document.getElementById('uniSearch').addEventListener('input', e=>{
   const q=e.target.value.trim();
@@ -1967,6 +1977,76 @@ if (!window.supabase) {
 
   requestAnimationFrame(()=>{ setTimeout(()=>{ toast.classList.add('wb-show'); }, 150); });
   setTimeout(hideToast, 5000);
+})();
+
+/* ---------- AI CHAT (الذكاء الاصطناعي) — talks to /.netlify/functions/chat ---------- */
+(function(){
+  const chatWindow = document.getElementById('chatWindow');
+  const chatInput = document.getElementById('chatInput');
+  const chatSendBtn = document.getElementById('chatSendBtn');
+  if(!chatWindow || !chatInput || !chatSendBtn) return;
+
+  function clearEmptyNote(){
+    const note = chatWindow.querySelector('.chat-empty');
+    if(note) note.remove();
+  }
+  function appendMessage(text, who){
+    clearEmptyNote();
+    const div = document.createElement('div');
+    div.className = 'chat-msg ' + who;
+    div.textContent = text;
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    return div;
+  }
+  function appendTyping(){
+    clearEmptyNote();
+    const div = document.createElement('div');
+    div.className = 'chat-msg bot typing';
+    div.innerHTML = '<span class="chat-dot"></span><span class="chat-dot"></span><span class="chat-dot"></span>';
+    chatWindow.appendChild(div);
+    chatWindow.scrollTop = chatWindow.scrollHeight;
+    return div;
+  }
+  async function sendChatMessage(){
+    const text = chatInput.value.trim();
+    if(!text) return;
+    appendMessage(text, 'user');
+    chatInput.value = '';
+    chatInput.style.height = 'auto';
+    chatSendBtn.disabled = true;
+    const typingEl = appendTyping();
+    try{
+      const res = await fetch('/.netlify/functions/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ message: text })
+      });
+      const data = await res.json().catch(()=>({}));
+      typingEl.remove();
+      if(res.ok && data && data.reply){
+        appendMessage(data.reply, 'bot');
+      } else {
+        appendMessage((data && data.error) || 'تعذّر الحصول على رد الآن، حاول مرة أخرى.', 'bot error');
+      }
+    } catch(err){
+      typingEl.remove();
+      appendMessage('تعذّر الاتصال بالخادم. تأكد من اتصالك بالإنترنت وحاول مرة أخرى.', 'bot error');
+    } finally {
+      chatSendBtn.disabled = false;
+    }
+  }
+  chatSendBtn.addEventListener('click', sendChatMessage);
+  chatInput.addEventListener('keydown', e=>{
+    if(e.key==='Enter' && !e.shiftKey){
+      e.preventDefault();
+      sendChatMessage();
+    }
+  });
+  chatInput.addEventListener('input', ()=>{
+    chatInput.style.height = 'auto';
+    chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + 'px';
+  });
 })();
 </script>
 </body>
