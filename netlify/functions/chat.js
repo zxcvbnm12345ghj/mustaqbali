@@ -1,5 +1,5 @@
 
-const DEFAULT_MODEL = 'gemini-2.5-pro';
+const DEFAULT_MODEL = 'gemini-1.5-flash';
 
 exports.handler = async (event) => {
   const headers = {
