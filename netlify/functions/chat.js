@@ -1,4 +1,4 @@
-// netlify/functions/chat.js
+// netlify/functions/chat.js  
 //
 // خدمة "الذكاء الاصطناعي" في منصة مستقبلي.
 // تستقبل رسالة المستخدم من الواجهة (index.html -> /.netlify/functions/chat)
