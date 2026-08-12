@@ -13,7 +13,7 @@
 // لا حاجة لأي تثبيت (npm install) — الدالة تستخدم fetch المدمجة في بيئة
 // Netlify Functions (Node 18+).
 
-const const DEFAULT_MODEL = 'gemini-2.5-flash';
+const DEFAULT_MODEL = 'gemini-2.5-flash';
 const MAX_MESSAGE_LENGTH = 4000;
 
 exports.handler = async (event) => {
